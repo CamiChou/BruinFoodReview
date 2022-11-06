@@ -2,6 +2,10 @@ import "./App.css";
 import React, { useState, useEffect } from "react";
 import { db } from "./firebase";
 import { ref, get } from "firebase/database";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import RestaurantDetail from "./RestaurantDetail.js"
 
 const dbRef = ref(db);
 
@@ -31,12 +35,20 @@ function App() {
     fetchData();
   }, []);
   return (
-    <div>
-      <h1>BruinYelp 😋</h1>
-      <h2>Eggert 🥺</h2>
-      <h3>Here is some JSON data (😎):</h3>
-      <pre>{loading ? "Loading..." : data}</pre>
-    </div>
+    <BrowserRouter>
+    <Routes>
+      <Route path="/" element={
+          <div>
+          <h1>BruinYelp 😋</h1>
+          <h2>Eggert 🥺</h2>
+          <h3>Here is some JSON data (😎):</h3>
+          <pre>{loading ? "Loading..." : data}</pre>
+        </div>
+      }>
+      </Route>
+      <Route path="abtres" element={<RestaurantDetail />} />
+    </Routes>
+  </BrowserRouter>
   );
 }
 
