@@ -1,0 +1,69 @@
+
+.ReviewContainer
+{
+    display: flex;
+    margin: 10%;
+    width: 80%;
+    flex-direction: column;
+    height: 100%;
+    background-color: blueviolet;
+
+}
+
+
+.ReviewTitleContainer
+{
+    display: flex;
+    height: 80%;
+    width: 100%;
+    background-color: red;
+    border-color: blue;
+}
+
+
+.ReviewTextContainer
+{
+    height: 80%;
+}
+
+
+.StarsContainer
+{
+    height: 100px;
+}
+
+
+
+button 
+{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    height: 100%;
+}
+
+
+.myReview
+{
+    size: 400px;
+}
+
+
+.myReview
+{
+    width: 95%;
+    margin: 1%;
+    height: 10vh;
+    font-size: 15px;
+    
+   
+}
+
+
+.on {
+color: yellow;
+}
+.off {
+color: #ccc;
+}
