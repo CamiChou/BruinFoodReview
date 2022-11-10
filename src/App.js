@@ -6,6 +6,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import RestaurantDetail from "./RestaurantDetail.js"
+import CreateReview from "./pages/createReviewPage/createReview.js"
 
 const dbRef = ref(db);
 
@@ -47,6 +48,7 @@ function App() {
       }>
       </Route>
       <Route path="abtres" element={<RestaurantDetail />} />
+      <Route path="createrev" element={<CreateReview />} />
     </Routes>
   </BrowserRouter>
   );
