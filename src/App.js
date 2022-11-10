@@ -4,14 +4,16 @@ import { db } from "./firebase";
 import { ref, get } from "firebase/database";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import FoodSearch from "./FoodSearch.js"
 import RestaurantDetail from "./RestaurantDetail.js"
+
 
 const dbRef = ref(db);
 
 function App() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,7 +48,8 @@ function App() {
         </div>
       }>
       </Route>
-      <Route path="abtres" element={<RestaurantDetail />} />
+      <Route path="abtres" element={<RestaurantDetail/>} />
+      <Route path="foodfilter" element={<FoodSearch/>} />
     </Routes>
   </BrowserRouter>
   );
