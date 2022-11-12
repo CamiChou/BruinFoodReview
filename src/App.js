@@ -1,7 +1,8 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
-import { db } from "./firebase";
+import { db, auth } from "./firebase";
 import { ref, get } from "firebase/database";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 
 const dbRef = ref(db);
 
@@ -9,6 +10,15 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
+  signInWithEmailAndPassword(auth, "grantpauker@gmail.com", "password")
+  .then((userCredential) => {
+    const user = userCredential.user;
+    console.log(user)
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+  });
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
