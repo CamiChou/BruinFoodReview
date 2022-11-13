@@ -10,7 +10,7 @@ import {
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import FoodSearch from "./FoodSearch.js";
-import RestaurantDetail from "./pages/createReviewPage/RestaurantDetail.js";
+import RestaurantDetail from "./pages/RestaurantDetail.js";
 import CreateReview from "./pages/createReviewPage/createReview.js";
 
 const dbRef = ref(db);
