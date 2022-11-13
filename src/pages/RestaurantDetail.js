@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 //firebase imports
-import { db, auth } from "../../firebase";
+import { db, auth } from "../firebase";
 import { ref, get } from "firebase/database";
 import {
   getAuth,
@@ -13,7 +13,7 @@ import {
 
 //imported components
 import Header from './Header.js'
-import StarRating from './StarRating.js'
+import StarRating from './createReviewPage/StarRating.js'
 
 // note: probably make reviews into a class
 
