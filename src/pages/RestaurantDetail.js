@@ -12,7 +12,6 @@ import {
 } from "firebase/auth";
 
 //imported components
-import Header from './Header.js'
 import StarRating from './createReviewPage/StarRating.js'
 
 // note: probably make reviews into a class
@@ -104,7 +103,6 @@ class RestaurantDetail extends React.Component {
     render() {
         return(
             <DetailContainer>
-                <Header />
                 <HandleInfo />
                 <HandleReview />
                 <LoadFBData />
