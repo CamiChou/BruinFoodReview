@@ -1,4 +1,5 @@
 
+
 .ReviewContainer
 {
     display: flex;
@@ -9,7 +10,6 @@
     background-color: blueviolet;
 
 }
-
 
 .ReviewTitleContainer
 {
@@ -41,14 +41,9 @@ button
     outline: none;
     cursor: pointer;
     height: 100%;
+    background-size: 100% 100%;
+    
 }
-
-
-.myReview
-{
-    size: 400px;
-}
-
 
 .myReview
 {
@@ -56,8 +51,7 @@ button
     margin: 1%;
     height: 10vh;
     font-size: 15px;
-    
-   
+
 }
 
 
@@ -67,3 +61,8 @@ color: yellow;
 .off {
 color: #ccc;
 }
+
+
+
+
+
