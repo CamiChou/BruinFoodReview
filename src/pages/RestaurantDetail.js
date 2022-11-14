@@ -54,7 +54,7 @@ function LoadFBData() {
       fetchData();
     }, []);
     return (
-        <div>{data.restaurants}</div>
+        <div>{restaurants}</div>
     );
 }
 
