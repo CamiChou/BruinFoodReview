@@ -3,8 +3,9 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 //firebase imports
-import { db, auth } from "../firebase";
-import { ref, get } from "firebase/database";
+import { db, auth, config } from "../firebase";
+import { getDatabase, onValue, ref, get, child } from "firebase/database";
+import Firebase from "firebase/compat/app"
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -12,50 +13,58 @@ import {
 } from "firebase/auth";
 
 //imported components
+import Header from './Header.jsx'
 import StarRating from './createReviewPage/StarRating.js'
 
 // note: probably make reviews into a class
 
-const dbRef = ref(db);
+const dbRef = ref(getDatabase());
 
-function LoadFBData() {
+// TODO: MAKE RESTAURANT INTO CLASS
+function LoadResTitle()
+{
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
-  
-    signInWithEmailAndPassword(auth, "grantpauker@gmail.com", "password")
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+    const [name, setName] = useState([]);
+
+    get(child(dbRef, `restaurants/bplate/name`)).then((snapshot) => {
+        if (snapshot.exists()) {
+          console.log(snapshot.val());
+          var info = snapshot.val();
+          setName(info);
+        } else {
+          console.log("No data available");
+        }
+      }).catch((error) => {
+        console.error(error);
       });
-  
-    useEffect(() => {
-      const fetchData = async () => {
-        setLoading(true);
-        get(dbRef)
-          .then((snapshot) => {
-            if (snapshot.exists()) {
-              let data_val = snapshot.val();
-              setData(JSON.stringify(data_val, null, 4));
-            } else {
-              console.log("No data available");
-            }
-            setLoading(false);
-          })
-          .catch((error) => {
-            setLoading(false);
-            console.error(error);
-          });
-      };
-  
-      fetchData();
-    }, []);
-    return (
-        <div>{data.restaurants}</div>
-    );
+
+    return(
+        <RestaurantTitle>{name}</RestaurantTitle>
+    )
+}
+
+function LoadResDesc()
+{
+    const [loading, setLoading] = useState(true);
+    const [data, setData] = useState([]);
+    const [desc, setDesc] = useState([]);
+
+    get(child(dbRef, `restaurants/bplate/desc`)).then((snapshot) => {
+        if (snapshot.exists()) {
+          console.log(snapshot.val());
+          var info = snapshot.val();
+          setDesc(info);
+        } else {
+          console.log("No data available");
+        }
+      }).catch((error) => {
+        console.error(error);
+      });
+
+    return(
+        <RestaurantDesc>{desc}</RestaurantDesc>
+    )
 }
 
 function RenderReview(props) {
@@ -63,22 +72,25 @@ function RenderReview(props) {
         <HoldReviews>
             <ReviewBase>
             teststsetests
-            </ReviewBase>
+            </ReviewBase>q
         </HoldReviews>
     );
 }
 
 function HandleInfo(props) {
+    const [resName, setResName] = useState([]);
+    const [resDesc, setResDesc] = useState([]);
+
     return(
         <InfoContainer>
             <ResContainer>
-                <RestaurantTitle>hiii</RestaurantTitle>
+                <LoadResTitle />
                 <RestaurantStars>
                     <StarRating />
                 </RestaurantStars>
-                <RestaurantDesc>DETAILDETAIL</RestaurantDesc>
+                <LoadResDesc />
             </ResContainer>
-            <RestaurantPhoto src = "/BruinYelp.png"/>
+            <RestaurantPhoto src="/BruinYelp.png" />
         </InfoContainer>
     );
 }
@@ -105,7 +117,6 @@ class RestaurantDetail extends React.Component {
             <DetailContainer>
                 <HandleInfo />
                 <HandleReview />
-                <LoadFBData />
             </DetailContainer>
             // then render reviews by calling a function
             );

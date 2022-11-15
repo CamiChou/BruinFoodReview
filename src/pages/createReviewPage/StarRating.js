@@ -13,8 +13,7 @@ const StarRating = () => {
       {[...Array(5)].map((star, index) => {
         index += 1;
         return (
-        
-
+      
           <button
             class="starComp"
             type="button"

@@ -3,37 +3,35 @@ import React, { useState } from "react";
 import StarRating from './StarRating'
 
 
+const [textVal] = useState('');
+
+const handleSubmit=(e)=>
+{
+  alert('A review was submitted');
+}
+
 
 const CreateReview = ({pageName}) => {
     return (
       <div id = {pageName}>
-
-        <div className="ReviewContainer">
-
-          <div className="ReviewTitleContainer">
-          <h1>
-            NAME OF RESTAURANT
-          </h1>
-
-          </div>
-
-
-          <div className= "StarsTextContainer">
-            <div className= "StarsContainer">
-              <StarRating/>
+        <div className = "BiggestBox">
+          <div className="ReviewContainer">
+            <div className="ReviewTitleContainer">
+              NAME OF RESTAURANT
             </div>
-            
+
             <div className= "ReviewTextContainer">
 
-              <form action="/url" method="GET">
+              <form class = "myForm" onSubmit={(e) => {handleSubmit(e)}}>
+                <StarRating/>
                 <p>Please enter some text below:</p>
 
-                <input id="myReview" class="myReview" type = 'text' placeholder="Write Review Here" >
-                
-
+                <input id="myReview" class="myReview" value = {textVal} type = 'text' placeholder="Write Review Here" >
                 </input>
-                
 
+                <div className="submitBtn">
+                  <input type="submit" value="Submit" className = "btn" />
+                </div>
 
 
               </form>
@@ -45,35 +43,13 @@ const CreateReview = ({pageName}) => {
         
               
             </div>
-
-          </div>
-
-          <div className= "PostButtonContainer">
-            <button>
-              Submit
-            </button>
-
-            
             
 
           </div>
-
         </div>
-
-
-
-
-
 
       </div>
 
-
-
-      // <div>
-      //   <h1>
-      //     IT IS WORKING
-      //   </h1>
-      // </div>
     );
   };
     
