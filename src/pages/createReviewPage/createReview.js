@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import StarRating from './StarRating'
 
 
-const [textVal] = useState('');
 
 const handleSubmit=(e)=>
 {
@@ -26,7 +25,7 @@ const CreateReview = ({pageName}) => {
                 <StarRating/>
                 <p>Please enter some text below:</p>
 
-                <input id="myReview" class="myReview" value = {textVal} type = 'text' placeholder="Write Review Here" >
+                <input id="myReview" class="myReview" type = 'text' placeholder="Write Review Here" >
                 </input>
 
                 <div className="submitBtn">

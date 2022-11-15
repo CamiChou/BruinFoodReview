@@ -24,11 +24,11 @@
     margin: auto;
     margin-top: 5%; 
     flex-direction: column;
-    height: 40%;
+    height: 60%;
     background-color: blueviolet;
     padding: 2%;
     border-radius: 25px;
-    grid-template-columns: 50% 50%;
+    
 
 }
 
@@ -68,8 +68,13 @@
 .submitBtn
 {
     height: 5vh;
+    width: 100%;
+    align-items: left;
     display: flex;
-    justify-content: center;
+    justify-content: left;
+    cursor: pointer;
+    margin:1%;
+
 }
 
 
@@ -80,6 +85,7 @@
     height: 80%;
     width: 1000px;
     display: flex;
+    flex-direction: column;
     
     
 }
@@ -110,8 +116,8 @@ button
     height: 10vh;
     font-size: 15px;
     border-radius: 20px;
-
-    
+    resize: none;
+    height: 20vh;
 
 }
 
