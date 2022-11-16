@@ -2,13 +2,10 @@ import styles from "./styles.css";
 import React, { useState } from "react";
 import StarRating from './StarRating'
 
-
-
 const handleSubmit=(e)=>
 {
   alert('A review was submitted');
 }
-
 
 const CreateReview = ({pageName}) => {
     return (
@@ -31,24 +28,11 @@ const CreateReview = ({pageName}) => {
                 <div className="submitBtn">
                   <input type="submit" value="Submit" className = "btn" />
                 </div>
-
-
               </form>
-
-
-
-
-
-        
-              
             </div>
-            
-
           </div>
         </div>
-
       </div>
-
     );
   };
     
