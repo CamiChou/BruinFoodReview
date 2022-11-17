@@ -9,7 +9,7 @@ import {
 } from "firebase/auth";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import FoodSearch from "./FoodSearch.js";
+import FoodSearch from "./pages/FoodSearch.js";
 import RestaurantDetail from "./pages/RestaurantDetail.js";
 import CreateReview from "./pages/createReviewPage/createReview.js";
 import Header from "./pages/Header.jsx";
