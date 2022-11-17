@@ -19,13 +19,11 @@ class Header extends React.Component {
                   <ul className="navbar-nav ml-auto">
                     <li className="nav-item">
                       <NavLink className="home-button" to="/">
-                        <a href = "" classname = "logo">
                             <img src = "/BruinYelp.png"
                             style = {{
                             width: "15vw",
                             padding: "2%" 
                             }} />
-                        </a>
                         <span className="sr-only"></span>
                       </NavLink>
                     </li>
