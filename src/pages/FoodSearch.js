@@ -11,7 +11,7 @@ import {
 
 import { getDatabase} from "firebase/database";
 import { ReactiveGoogleMap } from "@appbaseio/reactivemaps";
-import "./App.css";
+import "../App.css";
 const db=getDatabase();
 
 
