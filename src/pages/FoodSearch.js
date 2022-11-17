@@ -9,8 +9,10 @@ import {
   ReactiveList,
 } from "@appbaseio/reactivesearch";
 
+import { getDatabase} from "firebase/database";
 import { ReactiveGoogleMap } from "@appbaseio/reactivemaps";
 import "./App.css";
+const db=getDatabase();
 
 
 
@@ -71,7 +73,7 @@ class App extends Component {
       <div className="container-fluid">
         <ReactiveBase
           app="BruinFoodReview"
-          url= /*todo import firebase*/""
+          url= "https://cs35l-project-d0556-default-rtdb.firebaseio.com"
           enableAppbase
         >
           <nav className="header">
