@@ -9,10 +9,10 @@ import {
 } from "firebase/auth";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import FoodSearch from "./FoodSearch.js";
+import FoodSearch from "./pages/FoodSearch.js";
 import RestaurantDetail from "./pages/RestaurantDetail.js";
 import CreateReview from "./pages/createReviewPage/createReview.js";
-import Header from './pages/Header.jsx'
+import Header from "./pages/Header.jsx";
 
 const dbRef = ref(db);
 
@@ -23,7 +23,7 @@ function App() {
   signInWithEmailAndPassword(auth, "grantpauker@gmail.com", "password")
     .then((userCredential) => {
       const user = userCredential.user;
-      console.log(user);
+      //console.log(user);
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -66,7 +66,7 @@ function App() {
             </div>
           }
         ></Route>
-        <Route path="abtres" element={<RestaurantDetail />} />
+        <Route path="/abtres/:name" element={<RestaurantDetail />} />
         <Route path="foodfilter" element={<FoodSearch />} />
         <Route path="createrev" element={<CreateReview />} />
       </Routes>

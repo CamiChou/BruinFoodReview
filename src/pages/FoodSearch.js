@@ -9,15 +9,17 @@ import {
   ReactiveList,
 } from "@appbaseio/reactivesearch";
 
+import { getDatabase} from "firebase/database";
 import { ReactiveGoogleMap } from "@appbaseio/reactivemaps";
-import "./App.css";
+import "../App.css";
+const db=getDatabase();
 
 
 
 class App extends Component {
   onData(resturant) {
     const stars = [];
-    const { rating, address, cuisine, meal_period, type, service_style } = resturant;
+    const { rating, cuisine, meal_period, type, location, photo } = resturant;
     for (let x = 0; x < rating; x++) {
       stars.push(
         <span key={x}>
@@ -29,16 +31,16 @@ class App extends Component {
     return (
       <ReactiveList.ResultListWrapper>
         <ResultList key={resturant._id}>
-          
+        <ResultList.Image src={photo} />
           <ResultList.Content>
             <ResultList.Title>{resturant.name}</ResultList.Title>
             <ResultList.Description>
               <div>
-                <p>{address}</p>
+                <p>{location}</p>
                 <span className="tag">{cuisine}</span>
                 <span className="tag">{meal_period}</span>
                 <span className="tag">{type}</span>
-                <span className="tag">{service_style}</span>
+                <span className="tag">{location}</span>
                 <div>Avg. Student Reviews : {stars}</div>
               </div>
             </ResultList.Description>
@@ -59,7 +61,7 @@ class App extends Component {
             <strong>{marker.name}</strong>
           </div>
           <p style={{ margin: "5px 0", lineHeight: "18px" }}>
-            {marker.address}
+            {marker.location}
           </p>
         </div>
       </div>
@@ -71,7 +73,7 @@ class App extends Component {
       <div className="container-fluid">
         <ReactiveBase
           app="BruinFoodReview"
-          url= /*todo import firebase*/""
+          url= "https://cs35l-project-d0556-default-rtdb.firebaseio.com"
           enableAppbase
         >
           <nav className="header">
@@ -141,7 +143,7 @@ class App extends Component {
                       "ratingsReactor",
                       "meal_periodReactor",
                       "typeReactor",
-                      "service_styleReactor",,
+                      "locationReactor",,
                       "nameReactor",
                     ],
                   }}
@@ -170,7 +172,7 @@ class App extends Component {
                       "ratingsReactor",
                       "cuisineReactor",
                       "typeReactor",
-                      "service_styleReactor",
+                      "locationReactor",
                       "nameReactor",
                     ],
                   }}
@@ -199,7 +201,7 @@ class App extends Component {
                       "ratingsReactor",
                       "cuisineReactor",
                       "meal_periodReactor",
-                      "service_styleReactor",
+                      "locationReactor",
                       "nameReactor",
                     ],
                   }}
@@ -217,12 +219,12 @@ class App extends Component {
 
               <div className="box">
                 <MultiList
-                  dataField="service_style.keyword"
-                  title="Service Style Options"
-                  componentId="service_styleReactor"
-                  placeholder="Filter Service Style"
+                  dataField="location.keyword"
+                  title="Location Options"
+                  componentId="locationReactor"
+                  placeholder="Filter Location"
                   showFilter={true}
-                  filterLabel="Service Style Options"
+                  filterLabel="Location Options"
                   react={{
                     and: [
                       "ratingsReactor",
@@ -234,7 +236,7 @@ class App extends Component {
                   }}
                   renderError={(error) => (
                     <div>
-                      Something went wrong with Service Style MultiList
+                      Something went wrong with Location MultiList
                       <br />
                       Error details
                       <br />
@@ -289,7 +291,7 @@ class App extends Component {
                     "cuisineReactor",
                     "meal_periodReactor",
                     "typeReactor",
-                    "service_styleReactor",
+                    "locationReactor",
                     "nameReactor",
                   ],
                 }}
@@ -324,7 +326,7 @@ class App extends Component {
                     "cuisineReactor",
                     "meal_periodReactor",
                     "typeReactor",
-                    "service_styleReactor",
+                    "locationReactor",
                     "nameReactor",
                   ],
                 }}
