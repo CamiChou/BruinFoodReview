@@ -8,11 +8,10 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import FoodSearch from "./FoodSearch.js";
 import RestaurantDetail from "./pages/RestaurantDetail.js";
 import CreateReview from "./pages/createReviewPage/createReview.js";
-import Header from './pages/Header.jsx'
 
 const dbRef = ref(db);
 
@@ -52,8 +51,7 @@ function App() {
     fetchData();
   }, []);
   return (
-    <Router>
-      <Header />
+    <BrowserRouter>
       <Routes>
         <Route
           path="/"
@@ -70,7 +68,7 @@ function App() {
         <Route path="foodfilter" element={<FoodSearch />} />
         <Route path="createrev" element={<CreateReview />} />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 

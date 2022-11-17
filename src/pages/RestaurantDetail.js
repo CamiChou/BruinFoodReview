@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 //firebase imports
 import { db, auth, config } from "../firebase";
-import { getDatabase, onValue, ref, get, child } from "firebase/database";
+import { getDatabase, onValue, ref, get, child, orderByKey, orderByChild, equalTo, limitToFirst, onChildAdded, query } from "firebase/database";
 import Firebase from "firebase/compat/app"
 import {
   getAuth,
@@ -67,14 +67,69 @@ function LoadResDesc()
     )
 }
 
-function RenderReview(props) {
-    return(
-        <HoldReviews>
+class Reviews extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            reviews: Array().fill(null)
+        }
+    }
+
+    GrabReviews() {
+        const topUserPostsRef = query(ref(db, 'reviews'));
+        console.log(topUserPostsRef);
+    
+        get(child(topUserPostsRef, `/bplate`)).then((snapshot) => {
+            if (snapshot.exists()) {
+              console.log('HIIII' + snapshot.val());
+              var info = snapshot.val();
+    
+              // lists all reviews and its content
+              snapshot.forEach((child) => {
+                console.log(child.key, child.val());
+                var tester = child.val();
+                console.log(tester.content);
+                const temprev = [...this.state.reviews, tester];
+                this.setState({
+                    reviews: temprev
+                });
+              });
+            } else {
+              console.log("No data available");
+            }
+          }).catch((error) => {
+            console.error(error);
+          });
+    }
+
+    RenderReviews() {
+        var renderedReviews = [];
+
+        /* INFINITE
+        for (const rev of this.state.reviews) {
+            console.log(rev.content);
+          }
+          */
+
+        return(
             <ReviewBase>
-            teststsetests
-            </ReviewBase>q
-        </HoldReviews>
-    );
+                owowowo
+            </ReviewBase>
+        );
+    }
+
+    render() {
+        this.GrabReviews();
+
+        return(
+            <ReviewContainer>
+                <ReviewsTopTitle>Reviews</ReviewsTopTitle>
+                <HoldReviews>
+                    {this.RenderReviews()}
+                </HoldReviews>
+            </ReviewContainer>
+        );
+    }  
 }
 
 function HandleInfo(props) {
@@ -95,15 +150,6 @@ function HandleInfo(props) {
     );
 }
 
-function HandleReview(props) {
-    return(
-        <ReviewContainer>
-            <ReviewsTopTitle>Reviews</ReviewsTopTitle>
-            <RenderReview />
-        </ReviewContainer>
-    )
-}
-
 class RestaurantDetail extends React.Component {
     constructor(props) {
         super(props);
@@ -116,7 +162,7 @@ class RestaurantDetail extends React.Component {
         return(
             <DetailContainer>
                 <HandleInfo />
-                <HandleReview />
+                <Reviews />
             </DetailContainer>
             // then render reviews by calling a function
             );
