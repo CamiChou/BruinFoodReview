@@ -118,9 +118,7 @@ button
     border-radius: 20px;
     resize: none;
     height: 20vh;
-    text-align: start;
-    text-justify: auto;
-
+    vertical-align:text-top;
 }
 
 

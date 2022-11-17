@@ -13,28 +13,28 @@ const StarRating = () => {
       {[...Array(5)].map((star, index) => {
         index += 1;
         return (
-      
           <button
-            class="starComp"
             type="button"
             key={index}
             className={index <= (hover || rating) ? "on" : "off"}
             onClick={() => setRating(index)}
             onMouseEnter={() => setHover(index)}
             onMouseLeave={() => setHover(rating)}
+            value="rating"
           > 
             <img 
             src = {index <= (hover || rating) ? FIlLED : UNFILLED}
             style={{ width: 45, height: 45 }} 
              >
-              
             </img>
           </button>
+          
 
           
         );
       })}
     </div>
   );
+  console.log(rating);
 };
 export default StarRating;
