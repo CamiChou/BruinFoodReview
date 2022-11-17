@@ -15,7 +15,6 @@ const StarRating = () => {
         return (
       
           <button
-            class="starComp"
             type="button"
             key={index}
             className={index <= (hover || rating) ? "on" : "off"}
