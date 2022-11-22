@@ -1,6 +1,3 @@
-
-
-
 import styles from "./styles.css";
 import React, { useState } from "react";
 

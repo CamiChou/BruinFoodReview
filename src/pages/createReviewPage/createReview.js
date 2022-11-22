@@ -20,9 +20,6 @@ const CreateReview = ({ pageName }) => {
           const reviews = snapshot.val();
           console.log(reviews)
           next_id = reviews.metadata.next_id;
-
-          // alert("here");
-
          // console.log(StarRating.rating);
 
           set(child(dbRef, `reviews/bplate/${next_id}`), {
@@ -57,11 +54,12 @@ const CreateReview = ({ pageName }) => {
                   setStars(starAmt);
                 }}/>
                 <p>Please enter some text below:</p>
-                  <input
+                  <textarea
                     className="reviewContent"
-                    type="text"
+                    type="textInput"
                     onChange={(event) => setReviewContent(event.target.value)}
                     value={reviewContent}
+                    size
                   />
                   <div className="submitBtn">
                     <input type="submit" value="Submit" className="btn" />
