@@ -42,7 +42,7 @@ function App() {
     fetchData();
   }, []);
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
         <Route
           path="/"
@@ -59,7 +59,7 @@ function App() {
         <Route path="foodfilter" element={<FoodSearch />} />
         <Route path="createrev" element={<CreateReview />} />
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 }
 
