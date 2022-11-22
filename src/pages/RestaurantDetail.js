@@ -31,7 +31,6 @@ function LoadResTitle() {
   get(child(dbRef, `restaurants/${params.name}/name`))
     .then((snapshot) => {
       if (snapshot.exists()) {
-        console.log(snapshot.val());
         var info = snapshot.val();
         setName(info);
       } else {
@@ -54,7 +53,6 @@ function LoadResDesc() {
   get(child(dbRef, `restaurants/${params.name}/desc`))
     .then((snapshot) => {
       if (snapshot.exists()) {
-        console.log(snapshot.val());
         var info = snapshot.val();
         setDesc(info);
       } else {
@@ -66,6 +64,56 @@ function LoadResDesc() {
     });
 
   return <RestaurantDesc>{desc}</RestaurantDesc>;
+  }
+
+function RenderNew() {
+  const help = GrabReviewsNew();
+  console.log("WHATTTT2222  " + JSON.stringify(help), help.length)
+  return(
+    <ReviewBase>HELLOOO{  console.log("WHATTTT2222  " + JSON.stringify(help), help.length)
+  }</ReviewBase>
+  );
+}
+
+function GrabReviewsNew() {
+  const topUserPostsRef = query(ref(db, 'reviews'));
+  console.log(topUserPostsRef);
+
+  const temprev = [];
+  const name = [];
+
+  get(child(topUserPostsRef, `/bplate`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        console.log('HIIII' + snapshot.val());
+        var info = snapshot.val();
+
+        // lists all reviews and its content
+        snapshot.forEach((child) => {
+          const tester = child.val();
+          console.log(tester.content);
+          const temp = {
+            content: tester.content,
+            name: tester.user
+          };
+          temprev.push(temp);
+          name.push(tester.user);
+         });
+         console.log("WHAT" + JSON.stringify(temprev), temprev.length)
+        return(
+
+          <ReviewBase>hiii
+          <div>HIII!!!!!!!{temprev[0].content}</div>
+          </ReviewBase>
+        );
+      } else {
+        console.log("No data available");
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+
+    console.log("TEMPREVVV " + temprev[0]);
+    return name;
 }
 
 class Reviews extends React.Component {
@@ -76,57 +124,32 @@ class Reviews extends React.Component {
         }
     }
 
-    GrabReviews() {
-        const topUserPostsRef = query(ref(db, 'reviews'));
-        console.log(topUserPostsRef);
-    
-        get(child(topUserPostsRef, `/bplate`)).then((snapshot) => {
-            if (snapshot.exists()) {
-              console.log('HIIII' + snapshot.val());
-              var info = snapshot.val();
-    
-              // lists all reviews and its content
-              snapshot.forEach((child) => {
-                console.log(child.key, child.val());
-                var tester = child.val();
-                console.log(tester.content);
-                const temprev = [...this.state.reviews, tester];
-                this.setState({
-                    reviews: temprev
-                });
-              });
-            } else {
-              console.log("No data available");
-            }
-          }).catch((error) => {
-            console.error(error);
-          });
+    /*
+    SetReviews() {
+      const hi = this.GrabReviews();
+      this.state = {
+        reviews: hi
+      }
+      console.log("BARKKKKKKbaejsgdkjdgj" + this.state.reviews[0]);
     }
 
-    RenderReviews() {
-        var renderedReviews = [];
-
-        /* INFINITE
-        for (const rev of this.state.reviews) {
-            console.log(rev.content);
-          }
-          */
-
+    RenderReviews(name) {
+      const rev = this.state.reviews[0];
+      console.log("MOEWEWOWJEW" + rev);
+      const meow = name;
         return(
             <ReviewBase>
-                owowowo
+              {rev}
             </ReviewBase>
         );
     }
+    */
 
     render() {
-        this.GrabReviews();
-
         return(
             <ReviewContainer>
                 <ReviewsTopTitle>Reviews</ReviewsTopTitle>
                 <HoldReviews>
-                    {this.RenderReviews()}
                 </HoldReviews>
             </ReviewContainer>
         );
@@ -163,7 +186,10 @@ class RestaurantDetail extends React.Component {
         return(
             <DetailContainer>
                 <HandleInfo />
-                <Reviews />
+                <ReviewContainer>
+                <GrabReviewsNew />
+                <ReviewBase>HIII</ReviewBase>
+                </ReviewContainer>
             </DetailContainer>
             // then render reviews by calling a function
             );
