@@ -20,16 +20,6 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
-  signInWithEmailAndPassword(auth, "grantpauker@gmail.com", "password")
-    .then((userCredential) => {
-      const user = userCredential.user;
-      //console.log(user);
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-    });
-
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -60,7 +50,7 @@ function App() {
           element={
             <div>
               <h1>BruinYelp 😋</h1>
-              <h2>Eggert 🥺</h2>
+              <h2>Brought to you by Slaygert 🥺</h2>
               <h3>Here is some JSON data (😎):</h3>
               <pre>{loading ? "Loading..." : data}</pre>
             </div>
