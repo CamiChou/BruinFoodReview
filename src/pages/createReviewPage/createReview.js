@@ -31,8 +31,9 @@ const CreateReview = ({ pageName }) => {
             user: "cami",
           });
           set(child(dbRef, `reviews/bplate/metadata/next_id`), next_id + 1);
-          setReviewContent("");
           setStars(0);
+          setReviewContent("");
+          alert(stars)
           alert("review submitted!")
         } else {
           console.error(`Data does not exist reviews/bplate/${next_id}`);
@@ -49,10 +50,7 @@ const CreateReview = ({ pageName }) => {
           <div className="ReviewTitleContainer">NAME OF RESTAURANT</div>
             <div className= "ReviewTextContainer">
               <form className = "myForm" onSubmit={(e) => {handleSubmit(e)}}>
-                <StarRating rating={stars} setRating={(starAmt) => {
-                  console.log(starAmt, stars);
-                  setStars(starAmt);
-                }}/>
+                <StarRating rating={stars} setRating={setStars}/>
                 <p>Please enter some text below:</p>
                   <textarea
                     className="reviewContent"
