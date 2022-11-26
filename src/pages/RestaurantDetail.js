@@ -4,9 +4,7 @@ import styled from "styled-components";
 
 //firebase imports
 import { db, auth, config } from "../firebase";
-import { getDatabase, onValue, ref, get, child } from "firebase/database";
-
-
+import { getDatabase, onValue, ref, get, child, orderByKey, orderByChild, equalTo, limitToFirst, onChildAdded, query } from "firebase/database";
 import Firebase from "firebase/compat/app"
 import {
   getAuth,
