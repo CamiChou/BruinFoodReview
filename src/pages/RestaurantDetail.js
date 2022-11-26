@@ -16,6 +16,7 @@ import {
 //imported components
 import Header from './Header.jsx'
 import StarRating from './createReviewPage/StarRating.js'
+import { useParams } from "react-router-dom";
 
 // note: probably make reviews into a class
 
