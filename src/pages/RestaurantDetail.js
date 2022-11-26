@@ -169,7 +169,6 @@ function RestaurantDetail() {
         <LoadReviews />
         </ReviewContainer>
     </DetailContainer>
-    // then render reviews by calling a function
     );
 }
 
