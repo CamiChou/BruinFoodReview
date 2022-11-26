@@ -1,18 +1,35 @@
 import React from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
-import { db, auth } from "../firebase";
+import { db } from "../firebase";
 
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { getValueArrayWithinLimits } from "@appbaseio/reactivesearch/lib/utils";
+
 class Header extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { username: null, password: 10 };
+    this.state = {
+      username: null,
+      password: 10,
+      authenticated: false,
+      auth_error: false,
+      user: null,
+    };
+
+    this.auth = getAuth();
+    onAuthStateChanged(this.auth, (user) => {
+      this.setState((prevState) => ({
+        ...prevState,
+        authenticated: user != null,
+        user: user,
+      }));
+    });
   }
 
   handleUsernameChange(event) {
@@ -28,21 +45,26 @@ class Header extends React.Component {
       password: event.target.value,
     }));
   }
+
   handleLogin(event) {
+    this.setState((prevState) => ({
+      ...prevState,
+      auth_error: false,
+    }));
     signInWithEmailAndPassword(
-      auth,
+      this.auth,
       this.state.username,
       this.state.password
     ).catch((error) => {
-      if(error.code == "auth/invalid-email"){
-        console.log("Invalid authentication! D:");
-      }
+      this.setState((prevState) => ({
+        ...prevState,
+        auth_error: true,
+      }));
     });
-    const user = auth.currentUser;
-    console.log(user);
   }
+
   handleLogout(event) {
-    auth.signOut();
+    this.auth.signOut();
   }
 
   render() {
@@ -60,6 +82,36 @@ class Header extends React.Component {
         label: "Bruin Plate",
       },
     ];
+    let auth_input;
+    if (this.state.authenticated) {
+      auth_input = (
+        <>
+          <p> {this.state.user.email} logged in </p>
+          <button type="button" onClick={this.handleLogout.bind(this)}>
+            Log Out
+          </button>
+        </>
+      );
+    } else {
+      auth_input = (
+        <>
+          <input
+            className="usernameInput"
+            type="text"
+            onChange={this.handleUsernameChange.bind(this)}
+          />
+          <input
+            className="passwordInput"
+            type="text"
+            onChange={this.handlePasswordChange.bind(this)}
+          />
+          <button type="button" onClick={this.handleLogin.bind(this)}>
+            Log in
+          </button>
+          <p> {this.state.auth_error ? "Issue Logging In!" : ""}</p>
+        </>
+      );
+    }
     return (
       <div className="navigation">
         <nav className="navbar navbar-expand navbar-dark bg-dark">
@@ -94,22 +146,7 @@ class Header extends React.Component {
                   </NavLink>
                 </li>
               </ul>
-              <input
-                className="usernameInput"
-                type="text"
-                onChange={this.handleUsernameChange.bind(this)}
-              />
-              <input
-                className="passwordInput"
-                type="text"
-                onChange={this.handlePasswordChange.bind(this)}
-              />
-              <button type="button" onClick={this.handleLogin.bind(this)}>
-                Log in
-              </button>
-              <button type="button" onClick={this.handleLogout.bind(this)}>
-                Log Out
-              </button>
+              {auth_input}
             </div>
           </div>
         </nav>
