@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 //firebase imports
 import { db, auth, config } from "../firebase";
-import { getDatabase, onValue, ref, get, child, orderByKey, orderByChild, equalTo, limitToFirst, onChildAdded, query } from "firebase/database";
+import { getDatabase, onValue, ref, get, child, orderByKey, orderByChild, equalTo, limitToFirst, onChildAdded, query, runTransaction } from "firebase/database";
 import Firebase from "firebase/compat/app"
 import {
   getAuth,
@@ -66,94 +66,81 @@ function LoadResDesc() {
   return <RestaurantDesc>{desc}</RestaurantDesc>;
   }
 
-function RenderNew() {
-  const help = GrabReviewsNew();
-  console.log("WHATTTT2222  " + JSON.stringify(help), help.length)
-  return(
-    <ReviewBase>HELLOOO{  console.log("WHATTTT2222  " + JSON.stringify(help), help.length)
-  }</ReviewBase>
-  );
-}
-
-function GrabReviewsNew() {
+async function GrabReviewsNew() {
   const topUserPostsRef = query(ref(db, 'reviews'));
-  console.log(topUserPostsRef);
 
-  const temprev = [];
-  const name = [];
-
-  get(child(topUserPostsRef, `/bplate`)).then((snapshot) => {
+  const reviews = get(child(topUserPostsRef, `/bplate`)).then((snapshot) => {
       if (snapshot.exists()) {
-        console.log('HIIII' + snapshot.val());
-        var info = snapshot.val();
-
         // lists all reviews and its content
+        const name = [];
+        const temprev = [];
         snapshot.forEach((child) => {
           const tester = child.val();
-          console.log(tester.content);
+          //console.log("content: " + tester.content);
           const temp = {
             content: tester.content,
             name: tester.user
           };
           temprev.push(temp);
-          name.push(tester.user);
+          name.push("name: " + tester.user);
          });
-         console.log("WHAT" + JSON.stringify(temprev), temprev.length)
-        return(
-
-          <ReviewBase>hiii
-          <div>HIII!!!!!!!{temprev[0].content}</div>
-          </ReviewBase>
-        );
+         return temprev;
       } else {
         console.log("No data available");
+        return ["hi"]
       }
     }).catch((error) => {
       console.error(error);
     });
 
-    console.log("TEMPREVVV " + temprev[0]);
-    return name;
+    let result = await reviews;
+    return result;
 }
 
-class Reviews extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            reviews: Array().fill(null)
-        }
-    }
+function LoadReviews() {
+  const [revData, setRevData] = useState([]);
+  const [isLoading, setLoading] = useState(true);
 
-    /*
-    SetReviews() {
-      const hi = this.GrabReviews();
-      this.state = {
-        reviews: hi
-      }
-      console.log("BARKKKKKKbaejsgdkjdgj" + this.state.reviews[0]);
-    }
 
-    RenderReviews(name) {
-      const rev = this.state.reviews[0];
-      console.log("MOEWEWOWJEW" + rev);
-      const meow = name;
-        return(
-            <ReviewBase>
-              {rev}
+  useEffect(() => {
+    async function fetchData() {
+      const data = await GrabReviewsNew();
+      
+      //console.log("this is the data: ");
+      data.forEach(rev => {
+        //console.log("DATACONTENT: " + rev.content);
+      })
+      setRevData(data);
+      setLoading(false);
+    }
+    fetchData();
+  }, [revData]);
+
+  if(isLoading) {
+    return(
+      <ReviewContainer>
+      <ReviewsTopTitle>Reviews</ReviewsTopTitle>
+      <HoldReviews>
+        Loading Reviews...
+      </HoldReviews>
+  </ReviewContainer>
+    )
+  }
+  else {
+    return(
+      <ReviewContainer>
+          <ReviewsTopTitle>Reviews</ReviewsTopTitle>
+          <HoldReviews>
+            {revData.map((rev, id) => (
+            <ReviewBase key = {id}>
+              <UserName>{rev.name}</UserName>
+              <ReviewContent>{rev.content}</ReviewContent>
             </ReviewBase>
-        );
-    }
-    */
-
-    render() {
-        return(
-            <ReviewContainer>
-                <ReviewsTopTitle>Reviews</ReviewsTopTitle>
-                <HoldReviews>
-                </HoldReviews>
-            </ReviewContainer>
-        );
-    }  
+            ))}
+          </HoldReviews>
+      </ReviewContainer>
+    );
+  }
 }
 
 function HandleInfo(props) {
@@ -174,27 +161,16 @@ function HandleInfo(props) {
   );
 }
 
-class RestaurantDetail extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-
-        }
-    }
-
-    render() {
-        return(
-            <DetailContainer>
-                <HandleInfo />
-                <ReviewContainer>
-                <GrabReviewsNew />
-                <ReviewBase>HIII</ReviewBase>
-                </ReviewContainer>
-            </DetailContainer>
-            // then render reviews by calling a function
-            );
-    }
-
+function RestaurantDetail() {
+  return(
+    <DetailContainer>
+        <HandleInfo />
+        <ReviewContainer>
+        <LoadReviews />
+        </ReviewContainer>
+    </DetailContainer>
+    // then render reviews by calling a function
+    );
 }
 
 const InfoContainer = styled.div`
@@ -250,10 +226,10 @@ const RestaurantPhoto = styled.img`
 
 const ReviewContainer = styled.div`
   display: grid;
-  overflow-y: auto;
   width: 100%;
   max-width: 80vw;
   margin: auto;
+  margin-top: 1%;
 `;
 
 const ReviewsTopTitle = styled.h1`
@@ -267,16 +243,36 @@ const HoldReviews = styled.div`
   max-width: 100vw;
   padding-bottom: 2%;
   display: flex;
+  flex-direction: column;
   grid-row: 2;
+  overflow-y: auto;
 `;
 
 const ReviewBase = styled.div`
-  width: 100%;
   max-width: 80vw;
   display: flex;
   background-color: #d9d9d9;
   border-radius: 25px;
-  overflow-y: auto;
+  padding: 2%;
+  margin: 1%;
+  display: grid;
+  grid-template-rows: auto-fit;
+  flex-direction: column;
+`;
+
+const UserName = styled.h3`
+  align-self: center;
+  font-size: 2rem;
+  grid-row: 1;
+`;
+
+const ReviewStars = styled.div`
+  grid-row: 2;
+`;
+
+const ReviewContent = styled.div`
+  font-size: 1rem;
+  grid-row: 3;
 `;
 
 export default RestaurantDetail;
