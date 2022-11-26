@@ -11,6 +11,12 @@ import {
 } from "firebase/auth";
 import { getValueArrayWithinLimits } from "@appbaseio/reactivesearch/lib/utils";
 
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { getValueArrayWithinLimits } from "@appbaseio/reactivesearch/lib/utils";
 class Header extends React.Component {
   constructor(props) {
     super(props);
