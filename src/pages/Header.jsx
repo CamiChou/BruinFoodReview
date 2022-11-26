@@ -8,6 +8,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from "firebase/auth";
 import { getValueArrayWithinLimits } from "@appbaseio/reactivesearch/lib/utils";
 
@@ -23,6 +25,11 @@ class Header extends React.Component {
     };
 
     this.auth = getAuth();
+
+    this.provider = new GoogleAuthProvider();
+    this.provider.setCustomParameters({
+      prompt: "select_account",
+    });
     onAuthStateChanged(this.auth, (user) => {
       this.setState((prevState) => ({
         ...prevState,
@@ -32,35 +39,23 @@ class Header extends React.Component {
     });
   }
 
-  handleUsernameChange(event) {
-    this.setState((prevState) => ({
-      ...prevState,
-      username: event.target.value,
-    }));
-  }
-
-  handlePasswordChange(event) {
-    this.setState((prevState) => ({
-      ...prevState,
-      password: event.target.value,
-    }));
-  }
-
   handleLogin(event) {
     this.setState((prevState) => ({
       ...prevState,
       auth_error: false,
     }));
-    signInWithEmailAndPassword(
-      this.auth,
-      this.state.username,
-      this.state.password
-    ).catch((error) => {
-      this.setState((prevState) => ({
-        ...prevState,
-        auth_error: true,
-      }));
-    });
+    signInWithPopup(this.auth, this.provider)
+      .then((result) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        const user = result.user;
+      })
+      .catch((error) => {
+        this.setState((prevState) => ({
+          ...prevState,
+          auth_error: true,
+        }));
+      });
   }
 
   handleLogout(event) {
@@ -86,7 +81,7 @@ class Header extends React.Component {
     if (this.state.authenticated) {
       auth_input = (
         <>
-          <p> {this.state.user.email} logged in </p>
+          <p> {this.state.user.displayName} logged in </p>
           <button type="button" onClick={this.handleLogout.bind(this)}>
             Log Out
           </button>
@@ -95,18 +90,8 @@ class Header extends React.Component {
     } else {
       auth_input = (
         <>
-          <input
-            className="usernameInput"
-            type="text"
-            onChange={this.handleUsernameChange.bind(this)}
-          />
-          <input
-            className="passwordInput"
-            type="text"
-            onChange={this.handlePasswordChange.bind(this)}
-          />
           <button type="button" onClick={this.handleLogin.bind(this)}>
-            Log in
+            Log in/Sign Up
           </button>
           <p> {this.state.auth_error ? "Issue Logging In!" : ""}</p>
         </>
