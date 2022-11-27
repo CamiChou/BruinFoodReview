@@ -3,12 +3,14 @@ import styles from "./styles.css";
 import React, { useState } from "react";
 import StarRating from "./StarRating";
 import { getDatabase, ref, get, child, set } from "firebase/database";
+import { useParams } from "react-router-dom";
 
 const dbRef = ref(getDatabase());
 
 const CreateReview = ({ pageName }) => {
   const [reviewContent, setReviewContent] = useState("");
   const [stars, setStars] = useState(0);
+  const params = useParams();
   const handleSubmit = (event) => {
     event.preventDefault();
     let next_id = -1;
@@ -20,7 +22,6 @@ const CreateReview = ({ pageName }) => {
           const reviews = snapshot.val();
           console.log(reviews)
           next_id = reviews.metadata.next_id;
-         // console.log(StarRating.rating);
 
           set(child(dbRef, `reviews/bplate/${next_id}`), {
             // TODO: upvotes, and user

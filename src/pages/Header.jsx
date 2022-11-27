@@ -30,6 +30,9 @@ class Header extends React.Component {
     this.provider.setCustomParameters({
       prompt: "select_account",
     });
+  }
+
+  componentDidMount(){
     onAuthStateChanged(this.auth, (user) => {
       this.setState((prevState) => ({
         ...prevState,
