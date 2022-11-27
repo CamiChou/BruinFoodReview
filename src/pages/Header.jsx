@@ -134,6 +134,11 @@ class Header extends React.Component {
                     Food Search
                   </NavLink>
                 </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/main-page">
+                    Resturants
+                  </NavLink>
+                </li>
               </ul>
             </div>
           </div>
