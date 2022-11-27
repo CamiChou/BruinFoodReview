@@ -33,7 +33,7 @@ const CreateReview = ({ pageName }) => {
           set(child(dbRef, `reviews/bplate/metadata/next_id`), next_id + 1);
           setStars(0);
           setReviewContent("");
-          alert(stars)
+          // alert(stars)
           alert("review submitted!")
         } else {
           console.error(`Data does not exist reviews/bplate/${next_id}`);
