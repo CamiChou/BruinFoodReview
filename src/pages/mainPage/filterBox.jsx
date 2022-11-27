@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import styles from "./styles.css"
 import styled from "styled-components";
 
@@ -35,6 +35,14 @@ function buttonClick()
 {
   console.log("Clicked");
 }
+
+const types = ["ASUCLA", "Hilld Food", "Food Truck"];
+const service = ["Takeout", "Dine-In"];
+const food = ["American", "Italian", "Asian", 
+              "Meditteranean", "Dessert", "Market",
+              "Cafe", "Latin", "Dinner"];
+const period = ["Breakfast", "Lunch", "Dinner"];
+
 
 function FilterBox() {
   return (
