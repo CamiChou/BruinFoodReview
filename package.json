@@ -11,7 +11,6 @@
     "firebase": "^9.14.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.4.3",
     "react-scripts": "^5.0.1",
     "styled-components": "^5.3.6",
     "web-vitals": "^2.1.4"
@@ -22,6 +21,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  
   "browserslist": {
     "production": [
       ">0.2%",
@@ -35,8 +35,6 @@
     ]
   },
   "devDependencies": {
-    "eslint-plugin-flowtype": "^8.0.3",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-react-hooks": "^5.0.0-next-d1e35c703-20221110"
+    "react-router-dom": "^6.4.3"
   }
 }

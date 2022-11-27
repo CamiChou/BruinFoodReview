@@ -12,6 +12,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import FoodSearch from "./pages/FoodSearch.js";
 import RestaurantDetail from "./pages/RestaurantDetail.js";
 import CreateReview from "./pages/createReviewPage/createReview.js";
+import MainPage from "./pages/mainPage/mainPage.jsx";
 import Header from "./pages/Header.jsx";
 
 const dbRef = ref(db);
@@ -19,16 +20,6 @@ const dbRef = ref(db);
 function App() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-
-  signInWithEmailAndPassword(auth, "grantpauker@gmail.com", "password")
-    .then((userCredential) => {
-      const user = userCredential.user;
-      //console.log(user);
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-    });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,7 +51,7 @@ function App() {
           element={
             <div>
               <h1>BruinYelp 😋</h1>
-              <h2>Eggert 🥺</h2>
+              <h2>Brought to you by Slaygert 🥺</h2>
               <h3>Here is some JSON data (😎):</h3>
               <pre>{loading ? "Loading..." : data}</pre>
             </div>
@@ -69,6 +60,7 @@ function App() {
         <Route path="/abtres/:name" element={<RestaurantDetail />} />
         <Route path="foodfilter" element={<FoodSearch />} />
         <Route path="createrev" element={<CreateReview />} />
+        <Route path="main-page" element={<MainPage />} />
       </Routes>
     </Router>
   );
