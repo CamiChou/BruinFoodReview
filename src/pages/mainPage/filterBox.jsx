@@ -4,12 +4,32 @@ import styled from "styled-components";
 
 import { ref, get, child, query } from "firebase/database";
 
+const theme = {
+  grayDefault: {
+    default: '#757575',
+    hover: '#90a4ae'
+  },
+  blueClick: {
+    default: '#3284bf',
+    hover: '#90a4ae'
+  }
+}
+
 const Button = styled.button`
-  background-color: #757575;
+  background-color: ${props => theme[props.theme].default};
   padding: 5px 10px;
   border-radius: 5px;
   outline: 0;
+  transition: ease background-color 250ms;
+  margin: 5px 5px;
+  &:hover {
+    background-color: ${props => theme[props.theme].hover};
+  }
 `
+
+Button.defaultProps = {
+  theme: 'grayDefault'
+}
 
 function buttonClick()
 {
