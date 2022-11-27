@@ -1,6 +1,7 @@
 //hooks
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { NavLink, Link } from "react-router-dom";
 
 //firebase imports
 import { db, auth, config } from "../firebase";
@@ -119,27 +120,21 @@ function LoadReviews() {
 
   if(isLoading) {
     return(
-      <ReviewContainer>
-      <ReviewsTopTitle>Reviews</ReviewsTopTitle>
       <HoldReviews>
         Loading Reviews...
       </HoldReviews>
-  </ReviewContainer>
     )
   }
   else {
     return(
-      <ReviewContainer>
-          <ReviewsTopTitle>Reviews</ReviewsTopTitle>
-          <HoldReviews>
-            {revData.map((rev, id) => (
-            <ReviewBase key = {id}>
-              <UserName>{rev.name}</UserName>
-              <ReviewContent>{rev.content}</ReviewContent>
-            </ReviewBase>
-            ))}
-          </HoldReviews>
-      </ReviewContainer>
+      <HoldReviews>
+        {revData.map((rev, id) => (
+        <ReviewBase key = {id}>
+          <UserName>{rev.name}</UserName>
+          <ReviewContent>{rev.content}</ReviewContent>
+        </ReviewBase>
+        ))}
+      </HoldReviews>
     );
   }
 }
@@ -166,9 +161,15 @@ function RestaurantDetail() {
   return(
     <DetailContainer>
         <HandleInfo />
-        <ReviewContainer>
-        <LoadReviews />
-        </ReviewContainer>
+          <ReviewContainer>
+              <ReviewTitleContainer>
+                <ReviewsTopTitle>Reviews</ReviewsTopTitle>
+                <CreateReview to="/createrev">
+                    <h2>Create Review</h2>
+                </CreateReview>
+              </ReviewTitleContainer>
+              <LoadReviews />
+          </ReviewContainer>
     </DetailContainer>
     );
 }
@@ -232,10 +233,34 @@ const ReviewContainer = styled.div`
   margin-top: 1%;
 `;
 
+const ReviewTitleContainer = styled.div`
+  display: grid;
+  width: 100%;
+  max-width: 80vw;
+  margin: auto;
+  margin-top: 1%;
+  grid-row: 1;
+`;
+
 const ReviewsTopTitle = styled.h1`
     padding-top: 2%;
     font-size: 2rem;
-    grid-row: 1;
+    grid-column: 1;
+`;
+
+const CreateReview = styled(Link)`
+  background-color: #3284BF;
+  color: #EFEEEE;
+  border-radius: 25px;
+  height: min-content;
+  grid-column: 2;
+  margin-top: auto;
+  margin-bottom: auto;
+  max-width: fit-content;
+  justify-self: flex-end;
+  padding-right: 2%;
+  padding-left: 2%;
+  text-decoration: none;
 `;
 
 const HoldReviews = styled.div`
@@ -261,9 +286,10 @@ const ReviewBase = styled.div`
 `;
 
 const UserName = styled.h3`
-  align-self: center;
-  font-size: 2rem;
+  font-size: 1.5rem;
   grid-row: 1;
+  margin-top: 0%;
+  margin-bottom: 1%;
 `;
 
 const ReviewStars = styled.div`
