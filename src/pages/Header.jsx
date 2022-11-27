@@ -30,6 +30,9 @@ class Header extends React.Component {
     this.provider.setCustomParameters({
       prompt: "select_account",
     });
+  }
+
+  componentDidMount(){
     onAuthStateChanged(this.auth, (user) => {
       this.setState((prevState) => ({
         ...prevState,
@@ -127,13 +130,8 @@ class Header extends React.Component {
                   </li>
                 ))}
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/foodfilter">
-                    Food Search
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/createrev">
-                    Write Review
+                  <NavLink className="nav-link" to="/main-page">
+                    Resturants
                   </NavLink>
                 </li>
               </ul>

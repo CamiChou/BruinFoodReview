@@ -12,6 +12,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import FoodSearch from "./pages/FoodSearch.js";
 import RestaurantDetail from "./pages/RestaurantDetail.js";
 import CreateReview from "./pages/createReviewPage/createReview.js";
+import MainPage from "./pages/mainPage/mainPage.jsx";
 import Header from "./pages/Header.jsx";
 
 const dbRef = ref(db);
@@ -59,6 +60,7 @@ function App() {
         <Route path="/abtres/:name" element={<RestaurantDetail />} />
         <Route path="foodfilter" element={<FoodSearch />} />
         <Route path="createrev" element={<CreateReview />} />
+        <Route path="main-page" element={<MainPage />} />
       </Routes>
     </Router>
   );
