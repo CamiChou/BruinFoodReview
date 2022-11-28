@@ -161,7 +161,7 @@ function FilterBox(props) {
           key={i}
           name={button_elem.key}
           onClick={(e) => {
-            getFilteredResturants(e.target.name, setFilter);
+            getFilteredResturants(e.target.name, props.setFilter);
           }}
         >
           {button_elem.name}
