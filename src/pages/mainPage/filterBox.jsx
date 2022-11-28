@@ -31,9 +31,9 @@ Button.defaultProps = {
   theme: 'grayDefault'
 }
 
-function buttonClick()
+function buttonClick(e)
 {
-  console.log("Clicked");
+  console.log(e.target.name);
 }
 
 const types = ["ASUCLA", "Hilld Food", "Food Truck"];
@@ -51,14 +51,14 @@ function FilterBox() {
         <div className = "Type">
           <h3>Type</h3>
             <div>
-              <Button onClick={ buttonClick }>ASUCLA</Button>
+              <Button name="ascula" onClick={ buttonClick }>ASUCLA</Button>
               <Button onClick={ buttonClick }>Hill Food</Button>
               <Button onClick={ buttonClick }>Food Truck</Button>
             </div>
         </div>
         <div className="serviceType">
           <h3>Servive Type</h3>
-          <div>
+          <div >
             <Button onClick={ buttonClick }>Takeout</Button>
             <Button onClick={ buttonClick }>Dine-In</Button>
           </div>
