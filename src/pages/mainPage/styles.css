@@ -1,0 +1,14 @@
+.filterBox
+{
+  display: grid;
+  grid-template-rows: 10% 18% 18% 34% 20%;
+  align-self: left;
+  margin: auto;
+  margin-top: 5%;
+  padding: 2%;
+  overflow-y: auto;
+  height: 45vh;
+  width: 25vw;
+  background-color: #d9d9d9;
+  border-radius: 25px;
+}
