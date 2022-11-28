@@ -57,8 +57,8 @@ function App() {
           }
         ></Route>
         <Route path="/abtres/:name" element={<RestaurantDetail />} />
-        <Route path="foodfilter" element={<FoodSearch />} />
-        <Route path="createrev" element={<CreateReview />} />
+        <Route path="/foodfilter" element={<FoodSearch />} />
+        <Route path="/createrev/:name" element={<CreateReview />} />
       </Routes>
     </Router>
   );
