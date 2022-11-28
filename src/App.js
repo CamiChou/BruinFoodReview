@@ -9,7 +9,6 @@ import {
 } from "firebase/auth";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import FoodSearch from "./pages/FoodSearch.js";
 import RestaurantDetail from "./pages/RestaurantDetail.js";
 import CreateReview from "./pages/createReviewPage/createReview.js";
 import MainPage from "./pages/mainPage/mainPage.jsx";
@@ -58,8 +57,7 @@ function App() {
           }
         ></Route>
         <Route path="/abtres/:name" element={<RestaurantDetail />} />
-        <Route path="foodfilter" element={<FoodSearch />} />
-        <Route path="createrev" element={<CreateReview />} />
+        <Route path="createrev/:name" element={<CreateReview />} />
         <Route path="main-page" element={<MainPage />} />
       </Routes>
     </Router>
