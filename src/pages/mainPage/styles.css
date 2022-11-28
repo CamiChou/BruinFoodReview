@@ -1,7 +1,13 @@
+.mainBG {
+  background-color: #EFEEEE;
+  display: flex;
+  flex-direction: column;
+}
+
 .filterBox
 {
   display: grid;
-  grid-template-rows: 10% 18% 18% 34% 20%;
+  grid-template-rows: 4% 20% 20% 36% 20%;
   align-self: left;
   margin: auto;
   margin-top: 5%;

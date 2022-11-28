@@ -1,8 +1,6 @@
 .Box
 {
     background-color: #EFEEEE;
-
-
     display: flex;
     flex-direction: column;
 }
