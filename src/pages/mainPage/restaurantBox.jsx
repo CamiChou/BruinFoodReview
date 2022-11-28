@@ -12,11 +12,13 @@ async function loadRestaurants() {
       let restaurant_buf = [];
       if (snapshot.exists()) {
         snapshot.forEach((childSnapshot) => {
+          const childKey=childSnapshot.key;
           const childData = childSnapshot.val();
           restaurant_buf.push({
             name: childData.name,
             type: childData.type,
             loc: childData.location,
+            url: "/rest-photos/"+childKey+".jpeg"
           });
         });
       }
@@ -40,16 +42,27 @@ function RestaurantBox() {
     }
     fetchData();
   }, [restaurants]);
-  console.log(restaurants);
   let restaurant_tiles;
   if (isLoading) {
     restaurant_tiles = <p>Restaurants are loading!</p>;
   } else {
     restaurant_tiles = restaurants.map((rest, id) => (
+      
       <div className="Tile">
-        Name: {rest.name}
-        Type: {rest.type}
-        Location: {rest.loc}
+        <h1 className="Text">{rest.name}</h1>
+        <br/>
+        <img 
+            src={rest.url}
+            style={{
+              width: "15vw",
+              padding: "2%",
+              alignContent: "central"
+            }}
+        />
+        <br/>
+        <h4>Type: {rest.type} </h4>
+        <br/>
+        <h4>Location: {rest.loc}</h4>
       </div>
     ));
   }
