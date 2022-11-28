@@ -57,7 +57,7 @@ function App() {
           }
         ></Route>
         <Route path="/abtres/:name" element={<RestaurantDetail />} />
-        <Route path="createrev" element={<CreateReview />} />
+        <Route path="createrev/:name" element={<CreateReview />} />
         <Route path="main-page" element={<MainPage />} />
       </Routes>
     </Router>

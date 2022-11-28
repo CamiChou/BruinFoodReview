@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { db } from "../firebase";
+import { ref, set, child } from "firebase/database";
 
 import {
   getAuth,
@@ -12,6 +13,8 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { getValueArrayWithinLimits } from "@appbaseio/reactivesearch/lib/utils";
+
+const dbRef = ref(db);
 
 class Header extends React.Component {
   constructor(props) {
@@ -32,7 +35,7 @@ class Header extends React.Component {
     });
   }
 
-  componentDidMount(){
+  componentDidMount() {
     onAuthStateChanged(this.auth, (user) => {
       this.setState((prevState) => ({
         ...prevState,
@@ -49,11 +52,10 @@ class Header extends React.Component {
     }));
     signInWithPopup(this.auth, this.provider)
       .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
         const user = result.user;
       })
       .catch((error) => {
+        console.error(error.message);
         this.setState((prevState) => ({
           ...prevState,
           auth_error: true,
@@ -84,12 +86,20 @@ class Header extends React.Component {
     if (this.state.authenticated) {
       auth_input = (
         <>
-        <LoggedIn>
-            <h2 style = {{gridColumn: "1", justifySelf: "flex-end", paddingRight: "2%"}}>Welcome {this.state.user.displayName}</h2>
+          <LoggedIn>
+            <h2
+              style={{
+                gridColumn: "1",
+                justifySelf: "flex-end",
+                paddingRight: "2%",
+              }}
+            >
+              Welcome {this.state.user.displayName}
+            </h2>
             <SignOut onClick={this.handleLogout.bind(this)}>
               <h1>Log Out</h1>
             </SignOut>
-        </LoggedIn>
+          </LoggedIn>
         </>
       );
     } else {
@@ -108,7 +118,11 @@ class Header extends React.Component {
           <div className="container">
             <div>
               <HoldHeader>
-                <NavLink style ={{gridColumn: "1"}}className="home-button" to="/">
+                <NavLink
+                  style={{ gridColumn: "1" }}
+                  className="home-button"
+                  to="/"
+                >
                   <img
                     src="/BruinYelp.png"
                     style={{
@@ -117,9 +131,7 @@ class Header extends React.Component {
                     }}
                   />
                 </NavLink>
-                <HoldButton>
-                  {auth_input}
-                </HoldButton>
+                <HoldButton>{auth_input}</HoldButton>
               </HoldHeader>
               <ul className="navbar-nav ml-auto">
                 {resturants.map((resturant, id) => (
@@ -144,8 +156,8 @@ class Header extends React.Component {
 }
 
 const SignIn = styled.button`
-  background-color: #3284BF;
-  color: #EFEEEE;
+  background-color: #3284bf;
+  color: #efeeee;
   border-radius: 25px;
   height: min-content;
   position: relative;
@@ -158,8 +170,8 @@ const SignIn = styled.button`
 `;
 
 const SignOut = styled.button`
-  background-color: #3284BF;
-  color: #EFEEEE;
+  background-color: #3284bf;
+  color: #efeeee;
   border-radius: 25px;
   height: min-content;
   grid-column: 2;
