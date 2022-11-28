@@ -12,6 +12,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import FoodSearch from "./pages/FoodSearch.js";
 import RestaurantDetail from "./pages/RestaurantDetail.js";
 import CreateReview from "./pages/createReviewPage/createReview.js";
+import MainPage from "./pages/mainPage/mainPage.jsx";
 import Header from "./pages/Header.jsx";
 
 const dbRef = ref(db);

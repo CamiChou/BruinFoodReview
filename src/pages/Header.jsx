@@ -142,13 +142,8 @@ class Header extends React.Component {
                   </li>
                 ))}
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/foodfilter">
-                    Food Search
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/createrev">
-                    Write Review
+                  <NavLink className="nav-link" to="/main-page">
+                    Resturants
                   </NavLink>
                 </li>
               </ul>
