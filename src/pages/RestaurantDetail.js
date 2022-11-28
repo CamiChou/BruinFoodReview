@@ -7,6 +7,8 @@ import { db } from "../firebase";
 import { ref, get, child, query } from "firebase/database";
 import StarRating from "./createReviewPage/StarRating.js";
 import { useParams } from "react-router-dom";
+import userEvent from "@testing-library/user-event";
+import { getAuth } from "firebase/auth";
 
 const dbRef = ref(db);
 
@@ -132,13 +134,15 @@ function HandleInfo(props) {
 }
 
 function RestaurantDetail() {
+  const params = useParams();
+  const review_path = `/createrev/${params.name}`;
   return (
     <DetailContainer>
       <HandleInfo />
       <ReviewContainer>
         <ReviewTitleContainer>
           <ReviewsTopTitle>Reviews</ReviewsTopTitle>
-          <CreateReview to="/createrev">
+          <CreateReview to={review_path}>
             <h2>Create Review</h2>
           </CreateReview>
         </ReviewTitleContainer>
