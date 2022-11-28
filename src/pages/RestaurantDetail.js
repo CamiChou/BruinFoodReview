@@ -72,7 +72,6 @@ async function GrabReviewsNew(restName) {
         });
         return reviews;
       } else {
-        console.error(`No reviews found for ${restName}`);
         return [];
       }
     })
@@ -102,16 +101,23 @@ function LoadReviews() {
   if (isLoading) {
     return <HoldReviews>Loading Reviews...</HoldReviews>;
   } else {
-    return (
-      <HoldReviews>
-        {revData.map((rev, id) => (
-          <ReviewBase key={id}>
-            <UserName>{rev.name}</UserName>
-            <ReviewContent>{rev.content}</ReviewContent>
-          </ReviewBase>
-        ))}
-      </HoldReviews>
-    );
+    if(revData.length == 1)
+    {
+      return <HoldReviews>No reviews yet! Be the first to create a review!</HoldReviews>
+    }
+    else
+    {
+      return (
+        <HoldReviews>
+          {revData.map((rev, id) => (
+            <ReviewBase key={id}>
+              <UserName>{rev.name}</UserName>
+              <ReviewContent>{rev.content}</ReviewContent>
+            </ReviewBase>
+          ))}
+        </HoldReviews>
+      );
+    }
   }
 }
 
