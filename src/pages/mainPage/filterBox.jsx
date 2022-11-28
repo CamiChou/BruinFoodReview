@@ -1,19 +1,10 @@
-import React, { Component, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from "./styles.css"
 import styled from "styled-components";
 
 import { db } from "../../firebase.js";
-import { ref, get, child, query } from "firebase/database";
-
-const dbRef = ref(db);
-
-/* FUNCTION TO RETURN FIREBASE ARRAY*/
-function getFilteredResturants(filter) {
-  let filterArr = []
-
-  return filterArr
-}
-
+import { ref, get, child } from "firebase/database";
+  
 const theme = {
   grayDefault: {
     default: '#757575',
@@ -41,10 +32,36 @@ Button.defaultProps = {
   theme: 'grayDefault'
 }
 
+const dbRef = ref(db);
+
+async function getFilteredResturants(filter) {
+  // let restaurants = await get(child(dbRef, `restaurants`));
+  let path;
+  // if(filter == "") {
+  path = "filters/".concat(filter);
+  // }
+  // else {
+  //   path = "restaurants";
+  // }
+  let filters = await get(child(dbRef, `${path}`))
+    .then((snapshot) => {
+      let filter_buf = [];
+      if (snapshot.exists()) {
+        snapshot.forEach((childSnapshot) => {
+          const childKey=childSnapshot.key;
+          filter_buf.push(childKey);
+        });
+      }
+      return filter_buf;
+    })
+    .catch((error) => {
+      console.error(error.message);
+    });
+}
+
 function buttonClick(e)
 {
-  console.log(e.target.name);
-  getFilteredResturants(e);
+  getFilteredResturants(e.target.name);
 }
 
 
