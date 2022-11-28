@@ -52,41 +52,41 @@ function FilterBox() {
           <h3>Type</h3>
             <div>
               <Button name="ascula" onClick={ buttonClick }>ASUCLA</Button>
-              <Button onClick={ buttonClick }>Hill Food</Button>
-              <Button onClick={ buttonClick }>Food Truck</Button>
+              <Button name="hillfood" onClick={ buttonClick }>Hill Food</Button>
+              <Button name="foodtruck" onClick={ buttonClick }>Food Truck</Button>
             </div>
         </div>
         <div className="serviceType">
           <h3>Servive Type</h3>
           <div >
-            <Button onClick={ buttonClick }>Takeout</Button>
-            <Button onClick={ buttonClick }>Dine-In</Button>
+            <Button name="takeout" onClick={ buttonClick }>Takeout</Button>
+            <Button name="dinein" onClick={ buttonClick }>Dine-In</Button>
           </div>
         </div>
         <div className="foodOffered">
           <h3>Food Offered</h3>
           <div>
-            <Button onClick={ buttonClick }>American</Button>
-            <Button onClick={ buttonClick }>Italian</Button>
-            <Button onClick={ buttonClick }>Asian</Button>
+            <Button name="american" onClick={ buttonClick }>American</Button>
+            <Button name="italian" onClick={ buttonClick }>Italian</Button>
+            <Button name="asian" onClick={ buttonClick }>Asian</Button>
           </div>
           <div>
-          <Button onClick={ buttonClick }>Meditteranean</Button>
-          <Button onClick={ buttonClick }>Dessert</Button>
-          <Button onClick={ buttonClick }>Market</Button>
+          <Button name="meditteranean" onClick={ buttonClick }>Meditteranean</Button>
+          <Button name="dessert" onClick={ buttonClick }>Dessert</Button>
+          <Button name="market" onClick={ buttonClick }>Market</Button>
           </div>
           <div>
-          <Button onClick={ buttonClick }>Cafe</Button>
-          <Button onClick={ buttonClick }>Latin</Button>
-          <Button onClick={ buttonClick }>Sandwhiches</Button>
+          <Button name="cafe" onClick={ buttonClick }>Cafe</Button>
+          <Button name="latin" onClick={ buttonClick }>Latin</Button>
+          <Button name="sandwiches" onClick={ buttonClick }>Sandwiches</Button>
           </div>
         </div>
         <div className="mealPeriod">
           <h3>Meal Period</h3>
           <div>
-            <Button onClick={ buttonClick }>Breakfast</Button>
-            <Button onClick={ buttonClick }>Lunch</Button>
-            <Button onClick={ buttonClick }>Dinner</Button>
+            <Button name="breakfast" onClick={ buttonClick }>Breakfast</Button>
+            <Button name="lunch" onClick={ buttonClick }>Lunch</Button>
+            <Button name="dinner" onClick={ buttonClick }>Dinner</Button>
           </div>
         </div>
 
