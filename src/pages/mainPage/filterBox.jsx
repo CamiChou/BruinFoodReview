@@ -52,6 +52,7 @@ async function getFilteredResturants(filter) {
           filter_buf.push(childKey);
         });
       }
+      console.log(filter_buf);
       return filter_buf;
     })
     .catch((error) => {
