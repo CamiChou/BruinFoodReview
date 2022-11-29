@@ -1,70 +1,37 @@
-# Getting Started with Create React App
+# BruinYelp
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<img src="./public/BruinYelp.png" width=944 height=480>
 
-## Available Scripts
 
-In the project directory, you can run:
 
-### `npm start`
+## How to run BruinYelp on your machine
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Get Local code
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Clone the repository, `cd` into it if necessary, and install the requirements (assuming you already have [npm](https://www.npmjs.com/get-npm) installed on your machine):
+```shell
+git clone https://github.com/CamiChou/BruinFoodReview
+cd ./BruinFoodReview
+npm install
+```
 
-### `npm test`
+### Run the app
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+In the root directory, simply run:
+```bash
+npm start
+```
+which starts the client-side app as well as listen on the server, meaning the app should open in your browser. Note that it may take some time for npm to start the server. If it does not, enter http://localhost:3000/ into your browser and you should be good to go. Once the app has opened, you will need to create a BruinYelp account in order to post reviews. This can be done relatively easily using your google account information.
 
-### `npm run build`
+## Technology
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Creators
+This Project is brought to you by the following students in Professor Eggert's Fall 2022 CS35L class:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+[Cami Chou](https://github.com/CamiChou) \
+[Dagny Parayao](https://github.com/dparayao) \
+[Grant Pauker](https://github.com/grantpauker) \
+[Paige Larson](https://github.com/paigelarson) \
+[Alex Branch](https://github.com/alexrbranch)
