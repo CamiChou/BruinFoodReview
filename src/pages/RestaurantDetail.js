@@ -159,7 +159,7 @@ async function upvote(e, inc) {
 
 function HandleRestaurantInfo() {
   const params = useParams();
-  const photo_path = `/rest-photos/${params.name}.jpeg`;
+  const photoPath = `/rest-photos/${params.name}.jpeg`;
   const [averageStars, setAverageStars] = useState(5);
   const [restaurantData, setRestaurantData] = useState({});
   const [isLoading, setLoading] = useState(true);
@@ -193,19 +193,16 @@ function HandleRestaurantInfo() {
   );
 }
 
-function HandleRestaurant() {
-  const params = useParams();
+function HandleRestaurant(restName) {
   return (
     <InfoContainer>
-      {HandleRestaurantInfo(params)}
-      <RestaurantPhoto src={`/rest-photos/${params.name}.jpeg`} />
+      {HandleRestaurantInfo(restName)}
+      <RestaurantPhoto src={`/rest-photos/${restName}.jpeg`} />
     </InfoContainer>
   );
 }
 
-function HandleReviews() {
-  const params = useParams();
-  const review_path = `${params.name}/review`;
+function HandleReviewInfo(restName) {
   const [revData, setRevData] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const user = getAuth().currentUser;
@@ -213,7 +210,7 @@ function HandleReviews() {
 
   useEffect(() => {
     async function fetchData() {
-      const reviews = await LoadReviewData(params.name);
+      const reviews = await LoadReviewData(restName);
       setRevData(reviews);
       setLoading(false);
     }
@@ -230,7 +227,7 @@ function HandleReviews() {
       </HoldReviews>
     );
   } else {
-    reviewContent = (
+    reviewContent =  (
       <HoldReviews>
         {revData.map((rev, id) => (
           <ReviewBase key={id}>
@@ -239,28 +236,33 @@ function HandleReviews() {
               <ReviewStars>{RenderStars(rev.stars)}</ReviewStars>
             </ReviewTitleContainer>
             <ReviewContent>{rev.content}</ReviewContent>
-            <p> {rev.upvotes}</p>
+            <p> {rev.upvoteCount}</p>
             <button
               disabled={!authenticated}
               review-id={rev.id}
-              rest-name={params.name}
+              rest-name={restName}
               onClick={(e) => upvote(e, 1)}
             >
-              Up {rev.status == 1 ? "✓" : ""}
+              Up {rev.upvoteStatus == 1 ? "✓" : ""}
             </button>
             <button
               disabled={!authenticated}
               review-id={rev.id}
-              rest-name={params.name}
+              rest-name={restName}
               onClick={(e) => upvote(e, -1)}
             >
-              Down {rev.status == -1 ? "✓" : ""}
+              Down {rev.upvoteStatus == -1 ? "✓" : ""}
             </button>
           </ReviewBase>
         ))}
       </HoldReviews>
     );
   }
+  return reviewContent;
+}
+
+function HandleReviews(restName) {
+  const review_path = `/${restName}/review`;
   return (
     <ReviewContainer>
       <ReviewTitleContainer>
@@ -272,16 +274,18 @@ function HandleReviews() {
           </h2>
         </CreateReview>
       </ReviewTitleContainer>
-      {reviewContent}
+      {HandleReviewInfo(restName)}
     </ReviewContainer>
   );
 }
 
 function RestaurantDetail() {
+  const params = useParams();
+  const restName = params.name;
   return (
     <DetailContainer>
-      {HandleRestaurant()}
-      {HandleReviews()}
+      {HandleRestaurant(restName)}
+      {HandleReviews(restName)}
     </DetailContainer>
   );
 }
