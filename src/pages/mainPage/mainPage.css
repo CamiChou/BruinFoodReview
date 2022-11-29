@@ -1,0 +1,15 @@
+.split
+{
+    display: flex;
+    flex-direction: row;
+}
+
+.filterbox
+{
+    flex: 30%;
+}
+
+.restbox
+{
+    flex: 60%;
+} 

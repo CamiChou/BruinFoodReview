@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./filterBox.css";
 import styled from "styled-components";
-
 import { db } from "../../firebase.js";
 import { ref, get, child } from "firebase/database";
 
