@@ -70,15 +70,15 @@ class Header extends React.Component {
   render() {
     const resturants = [
       {
-        path: "/abtres/deneve",
+        path: "/deneve",
         label: "De Neve",
       },
       {
-        path: "/abtres/epic",
+        path: "/epic",
         label: "Epicuria",
       },
       {
-        path: "/abtres/bplate",
+        path: "/bplate",
         label: "Bruin Plate",
       },
     ];
@@ -133,6 +133,7 @@ class Header extends React.Component {
                 </NavLink>
                 <HoldButton>{auth_input}</HoldButton>
               </HoldHeader>
+              {/*
               <ul className="navbar-nav ml-auto">
                 {resturants.map((resturant, id) => (
                   <li key={id} className="nav-item">
@@ -147,7 +148,7 @@ class Header extends React.Component {
                     Resturants
                   </NavLink>
                 </li>
-              </ul>
+              </ul> */}
             </div>
           </div>
         </nav>

@@ -4,6 +4,7 @@ import mainPage from "./mainPage.css";
 import { db } from "../../firebase.js";
 import { ref, get, child } from "firebase/database";
 import { getFilteredResturants } from "./filterBox.jsx";
+import { Link } from "react-router-dom";
 
 const dbRef = ref(db);
 
@@ -22,6 +23,7 @@ async function loadRestaurants(filter) {
           ) {
             // TOOD: check why undefined
             restaurant_buf.push({
+              key: childKey,
               name: childData.name,
               type: childData.type,
               loc: childData.location,
@@ -56,6 +58,7 @@ function RestaurantBox(props) {
     restaurant_tiles = <p>Restaurants are loading!</p>;
   } else {
     restaurant_tiles = restaurants.map((rest, id) => (
+      <Link to={`/${rest.key}`}>
       <div key={id} className="Tile">
         <h1 className="Text">{rest.name}</h1>
         <br />
@@ -71,7 +74,7 @@ function RestaurantBox(props) {
         <h4>Type: {rest.type} </h4>
         <br />
         <h4>Location: {rest.loc}</h4>
-      </div>
+      </div></Link>
     ));
   }
 

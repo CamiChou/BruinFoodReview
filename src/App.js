@@ -45,20 +45,9 @@ function App() {
     <Router>
       <Header />
       <Routes>
-        <Route
-          path="/"
-          element={
-            <div>
-              <h1>BruinYelp 😋</h1>
-              <h2>Brought to you by Slaygert 🥺</h2>
-              <h3>Here is some JSON data (😎):</h3>
-              <pre>{loading ? "Loading..." : data}</pre>
-            </div>
-          }
-        ></Route>
-        <Route path="/abtres/:name" element={<RestaurantDetail />} />
-        <Route path="createrev/:name" element={<CreateReview />} />
-        <Route path="main-page" element={<MainPage />} />
+        <Route path="/" element={<MainPage />} />
+        <Route path="/:name/review" element={<CreateReview />} />
+        <Route path="/:name" element={<RestaurantDetail />} />
       </Routes>
     </Router>
   );

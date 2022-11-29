@@ -263,7 +263,7 @@ function HandleInfo(props) {
 
 function RestaurantDetail() {
   const params = useParams();
-  const review_path = `/createrev/${params.name}`;
+  const review_path = `/${params.name}/review`;
   return (
     <DetailContainer>
       <HandleInfo />
