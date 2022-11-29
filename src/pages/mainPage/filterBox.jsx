@@ -61,6 +61,17 @@ async function getFilteredResturants(name, setFilter) {
 function FilterBox(props) {
   const filter_buttons = [
     {
+      key: "general",
+      name: "Reset",
+      buttons: [
+        {
+          key: "all",
+          name: "All Restaurants",
+        },
+      ],
+    },
+
+    {
       key: "location",
       name: "Type",
       buttons: [
@@ -183,7 +194,8 @@ function FilterBox(props) {
   return (
     <div className="mainBG">
       <div className="filterBox">
-        <div className="filterBoxTitle">Filters</div>
+        <div className="filterBoxTitle">Filters
+        </div>
         {button_grid}
       </div>
     </div>
