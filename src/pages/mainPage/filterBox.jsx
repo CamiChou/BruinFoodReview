@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./filterBox.css";
 import styled from "styled-components";
-
 import { db } from "../../firebase.js";
 import { ref, get, child } from "firebase/database";
 
@@ -9,10 +8,12 @@ const theme = {
   grayDefault: {
     default: "#757575",
     hover: "#90a4ae",
+    onClick: "#FF0000",
   },
   blueClick: {
     default: "#3284bf",
     hover: "#90a4ae",
+    onClick: "#FF0000",
   },
 };
 
@@ -23,6 +24,9 @@ const Button = styled.button`
   outline: 0;
   transition: ease background-color 250ms;
   margin: 5px 5px;
+  &::click {
+    background-color: ${(props) => theme[props.theme].onClick};
+  }
   &:hover {
     background-color: ${(props) => theme[props.theme].hover};
   }

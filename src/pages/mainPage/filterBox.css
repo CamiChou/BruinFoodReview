@@ -2,6 +2,8 @@
   background-color: #EFEEEE;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+
 }
 
 .filterBox
@@ -9,12 +11,19 @@
   display: grid;
   grid-template-rows: 4% 20% 20% 36% 20%;
   align-self: left;
-  margin: auto;
+  margin: 2%;
   margin-top: 5%;
   padding: 2%;
   overflow-y: auto;
-  height: 45vh;
-  width: 25vw;
+  height: 100%;
+  width: 100%;
   background-color: #d9d9d9;
   border-radius: 25px;
+}
+
+.button:active {
+  outline-color: transparent;
+  outline-style:solid;
+  box-shadow: 0 0 0 4px #000000;
+  transition: 0.7s;
 }
