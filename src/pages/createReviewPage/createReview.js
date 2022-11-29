@@ -35,6 +35,7 @@ const CreateReview = ({ pageName }) => {
           stars: stars,
           timestamp: Date.now(),
           user: auth.currentUser.displayName,
+          upvotes: 0,
         },
         metadata: {
           next_id: next_id + 1,
