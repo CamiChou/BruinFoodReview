@@ -115,7 +115,7 @@ function FilterBox(props) {
         },
         {
           key: "italian",
-          name: "Italia",
+          name: "Italian",
         },
         {
           key: "asian",
@@ -158,7 +158,7 @@ function FilterBox(props) {
         },
         {
           key: "lunch",
-          name: "Lunc",
+          name: "Lunch",
         },
         {
           key: "dinner",
