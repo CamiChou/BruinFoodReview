@@ -4,22 +4,24 @@ import { useParams } from "react-router-dom";
 
 import FilterBox from "./filterBox.jsx";
 import RestaurantBox  from "./restaurantBox.jsx";
+import "./mainPage.css";
+
 
 function MainPage() {
   return (
     <div className="mainPage">
-      <div class="container">
-        <div class="row align-items-center my-5">
-          <div class="col-lg-5">
-            <h1 class="font-weight-light">Main Page</h1>
-            <p>
-              This is where we will have all resturants and filters
-            </p>
-          </div>
-          <div>
-            <FilterBox />
-            <RestaurantBox />
-          </div>
+      <h1 class="font-weight-light">Main Page</h1>
+      <p>
+        This is where we will have all resturants and filters
+      </p>
+      <div className="splitInHalf">
+
+        <div className = "filterBoxDiv">
+        <FilterBox/>
+        </div>
+
+        <div className = "RestaurantBoxDiv">
+        <RestaurantBox />
         </div>
       </div>
     </div>
@@ -27,3 +29,6 @@ function MainPage() {
 }
 
 export default MainPage;
+
+
+
