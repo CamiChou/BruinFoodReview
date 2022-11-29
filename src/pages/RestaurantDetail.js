@@ -232,9 +232,9 @@ function HandleInfo(params) {
   {
     return (
       <ResContainer>
-        <RestaurantTitle><h1></h1></RestaurantTitle>
+        <RestaurantTitle></RestaurantTitle>
         <RestaurantStars>{RenderStars(5)}</RestaurantStars>
-        <RestaurantDesc><h1></h1></RestaurantDesc>
+        <RestaurantDesc></RestaurantDesc>
       </ResContainer>
     );
   }
@@ -243,6 +243,7 @@ function HandleInfo(params) {
         <ResContainer>
           <RestaurantTitle>{restData.name}</RestaurantTitle>
           <RestaurantStars>{RenderStars(5)}</RestaurantStars>
+          <RestaurantLocation>{restData.loc}</RestaurantLocation>
           <RestaurantDesc>{restData.desc}</RestaurantDesc>
         </ResContainer>
     );
@@ -296,7 +297,7 @@ const InfoContainer = styled.div`
   padding: 2%;
   width: 100%;
   max-width: 80vw;
-  max-height: 55vh;
+  max-height: 60vh;
   background-color: #d9d9d9;
   border-radius: 25px;
 `;
@@ -312,7 +313,7 @@ const ResContainer = styled.div`
   max-height: inherit;
   max-width: 100vw;
   display: grid;
-  grid-template-rows: 20% 20%;
+  grid-template-rows: 15% 15% 10%;
   flex-direction: column;
   grid-column: 1;
 `;
@@ -324,6 +325,20 @@ const RestaurantTitle = styled.h1`
   margin: 0%;
 `;
 
+const RestaurantLocation = styled.div`
+  color: #efeeee;
+  border-radius: 18px;
+  background-color: #3284bf;
+  max-width: fit-content;
+  grid-row: 3;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  padding-right: 2%;
+  padding-left: 2%;
+  margin-top: auto;
+  margin-bottom: auto;
+`;
+
 const RestaurantStars = styled.div`
   margin-top: auto;
   margin-bottom: auto;
@@ -331,14 +346,14 @@ const RestaurantStars = styled.div`
 `;
 
 const Star = styled.img`
-  width: 55px;
-  height: 55px;
-  padding-right: 2%;
+  width: 40px;
+  height: 40px;
+  padding-right: 1%;
 `;
 
 const RestaurantDesc = styled.div`
   font-size: 1rem;
-  grid-row: 3;
+  grid-row: 4;
 `;
 
 const RestaurantPhoto = styled.img`
