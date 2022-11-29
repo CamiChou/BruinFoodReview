@@ -3,23 +3,31 @@ import mainPage from "./restaurantBox.css";
 
 import { db } from "../../firebase.js";
 import { ref, get, child } from "firebase/database";
+import { getFilteredResturants } from "./filterBox.jsx";
 
 const dbRef = ref(db);
 
-async function loadRestaurants() {
+async function loadRestaurants(filter) {
   let restaurants = await get(child(dbRef, `restaurants`))
     .then((snapshot) => {
       let restaurant_buf = [];
       if (snapshot.exists()) {
         snapshot.forEach((childSnapshot) => {
-          const childKey=childSnapshot.key;
+          const childKey = childSnapshot.key;
           const childData = childSnapshot.val();
-          restaurant_buf.push({
-            name: childData.name,
-            type: childData.type,
-            loc: childData.location,
-            url: "/rest-photos/"+childKey+".jpeg"
-          });
+          if (
+            filter === undefined ||
+            filter.length == 0 ||
+            filter.includes(childKey)
+          ) {
+            // TOOD: check why undefined
+            restaurant_buf.push({
+              name: childData.name,
+              type: childData.type,
+              loc: childData.location,
+              url: "/rest-photos/" + childKey + ".jpeg",
+            });
+          }
         });
       }
       return restaurant_buf;
@@ -30,13 +38,14 @@ async function loadRestaurants() {
   return restaurants;
 }
 
-function RestaurantBox() {
+function RestaurantBox(props) {
   const [restaurants, setRestaurants] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
-      const data = await loadRestaurants();
+      let filter = props.filter;
+      const data = await loadRestaurants(filter);
       setRestaurants(data);
       setLoading(false);
     }
@@ -47,17 +56,16 @@ function RestaurantBox() {
     restaurant_tiles = <p>Restaurants are loading!</p>;
   } else {
     restaurant_tiles = restaurants.map((rest, id) => (
-      
-      <div className="Tile">
+      <div key={id} className="Tile">
         <h1 className="Text">{rest.name}</h1>
         <br/>
         <img 
             src={rest.url}
             className = "restImage"
         />
-        <br/>
+        <br />
         <h4>Type: {rest.type} </h4>
-        <br/>
+        <br />
         <h4>Location: {rest.loc}</h4>
       </div>
     ));

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
 import { getDatabase, ref, get, child, set } from "firebase/database";
 import { useParams } from "react-router-dom";
 
@@ -8,6 +8,8 @@ import "./mainPage.css";
 
 
 function MainPage() {
+  const [filter, setFilter] = useState([]);
+  
   return (
     <div className="mainPage">
       <h1 class="font-weight-light">Main Page</h1>
@@ -21,7 +23,7 @@ function MainPage() {
         </div>
 
         <div className = "RestaurantBoxDiv">
-        <RestaurantBox />
+        <RestaurantBox />   
         </div>
       </div>
     </div>
