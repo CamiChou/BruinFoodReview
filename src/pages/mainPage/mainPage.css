@@ -12,4 +12,5 @@
 .restbox
 {
     flex: 60%;
+    overflow-y: auto;
 } 

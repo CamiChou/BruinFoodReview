@@ -8,10 +8,12 @@ const theme = {
   grayDefault: {
     default: "#757575",
     hover: "#90a4ae",
+    onClick: "#FF0000",
   },
   blueClick: {
     default: "#3284bf",
     hover: "#90a4ae",
+    onClick: "#FF0000",
   },
 };
 
@@ -22,6 +24,9 @@ const Button = styled.button`
   outline: 0;
   transition: ease background-color 250ms;
   margin: 5px 5px;
+  &::click {
+    background-color: ${(props) => theme[props.theme].onClick};
+  }
   &:hover {
     background-color: ${(props) => theme[props.theme].hover};
   }

@@ -18,9 +18,6 @@ function MainPage() {
 
             <div className='filterbox'><FilterBox filter={filter} setFilter={setFilter}/></div>
             <div className='restbox'><RestaurantBox filter={filter} setFilter={setFilter}/></div>
-            
-
-
 
           </div>
     </div>
