@@ -34,7 +34,7 @@ const CreateReview = ({ pageName }) => {
             // upvotes: 3,
             user: auth.currentUser.displayName
           });
-          set(child(dbRef, `reviews/bplate/${params.name}/next_id`), next_id + 1);
+          set(child(dbRef, `reviews/${params.name}/metadata/next_id`), next_id + 1);
           setStars(0);
           setReviewContent("");
           // alert(stars)
