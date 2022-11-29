@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import mainPage from "./mainPage.css";
+import mainPage from "./restaurantBox.css";
 
 import { db } from "../../firebase.js";
 import { ref, get, child } from "firebase/database";
