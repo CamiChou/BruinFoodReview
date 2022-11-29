@@ -31,7 +31,7 @@ const CreateReview = ({ pageName }) => {
             content: reviewContent,
             stars: stars,
             timestamp: Date.now(),
-            // upvotes: 3,
+            upvotes: 0,
             user: auth.currentUser.displayName
           });
           set(child(dbRef, `reviews/${params.name}/metadata/next_id`), next_id + 1);
