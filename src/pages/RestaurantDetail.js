@@ -14,52 +14,22 @@ import { FieldValue } from "firebase/firestore";
 
 const dbRef = ref(db);
 
-function LoadResTitle() {
-  const params = useParams();
-  const [name, setName] = useState([]);
+async function LoadData(params) {  
+  const restPath = `restaurants/${params.name}/`;
+  const restaurant = await get(child(dbRef, restPath))
+  .then((snapshot) => {
+    if (snapshot.exists()) {
+      const resObject = snapshot.val();
+      const resInfo = {
+        name: resObject.name,
+        desc: resObject.desc,
+        loc: resObject.location,
+      };
+      return resInfo;
+    }
+  })
 
-  const restPath = `restaurants/${params.name}/name`;
-  get(child(dbRef, restPath))
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        var info = snapshot.val();
-        setName(info);
-      } else {
-        console.error("");
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-
-  return <RestaurantTitle>{name}</RestaurantTitle>;
-}
-
-function LoadResDesc() {
-  const params = useParams();
-  const [desc, setDesc] = useState([]);
-
-  const restPath = `restaurants/${params.name}/desc`;
-  get(child(dbRef, restPath))
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        var info = snapshot.val();
-        setDesc(info);
-      } else {
-        console.log("No data available");
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-
-  return <RestaurantDesc>{desc}</RestaurantDesc>;
-}
-
-function LoadResPic() {
-  const params = useParams();
-
-  return <RestaurantPhoto src={`/rest-photos/${params.name}.jpeg`} />;
+  return restaurant;
 }
 
 async function GrabReviewsNew(restName) {
@@ -67,7 +37,7 @@ async function GrabReviewsNew(restName) {
   const user = auth.currentUser;
   // TODO check if logged in
 
-  const topUserPostsRef = query(ref(db, "reviews"));
+  const reviewsRef = query(ref(db, "reviews"));
   let existing_upvotes = {};
   if (user != null) {
     existing_upvotes = await get(
@@ -80,7 +50,7 @@ async function GrabReviewsNew(restName) {
     });
   }
 
-  let reviews = await get(child(topUserPostsRef, `/${restName}`))
+  let reviews = await get(child(reviewsRef, `/${restName}`))
     .then((snapshot) => {
       if (snapshot.exists()) {
         // lists all reviews and its content
@@ -195,7 +165,6 @@ function LoadReviews() {
   useEffect(() => {
     async function fetchData() {
       const data = await GrabReviewsNew(params.name);
-      data.forEach((rev) => {});
       setRevData(data);
       setLoading(false);
     }
@@ -205,7 +174,7 @@ function LoadReviews() {
   if (isLoading) {
     return <HoldReviews>Loading Reviews...</HoldReviews>;
   } else {
-    if (revData.length == 1) {
+    if (revData.length == 0) {
       return (
         <HoldReviews>
           No reviews yet! Be the first to create a review!
@@ -246,42 +215,75 @@ function LoadReviews() {
   }
 }
 
-function HandleInfo(props) {
-  const [resName, setResName] = useState([]);
-  const [resDesc, setResDesc] = useState([]);
+function HandleInfo(params) {
+  const [restData, setRestData] = useState([]);
+  const [isLoading, setLoading] = useState(true);
 
-  return (
-    <InfoContainer>
+  useEffect(() => {
+    async function FetchData() {
+      const data = await LoadData(params);
+      setRestData(data);
+      setLoading(false);
+    }
+    FetchData();
+  }, [restData]);
+
+  if(isLoading == true)
+  {
+    return (
       <ResContainer>
-        <LoadResTitle />
+        <RestaurantTitle><h1></h1></RestaurantTitle>
         <RestaurantStars>{RenderStars(5)}</RestaurantStars>
-        <LoadResDesc />
+        <RestaurantDesc><h1></h1></RestaurantDesc>
       </ResContainer>
-      <LoadResPic />
+    );
+  }
+  else {
+    return (
+        <ResContainer>
+          <RestaurantTitle>{restData.name}</RestaurantTitle>
+          <RestaurantStars>{RenderStars(5)}</RestaurantStars>
+          <RestaurantDesc>{restData.desc}</RestaurantDesc>
+        </ResContainer>
+    );
+  }
+}
+
+function HandleRestaurant(params) {
+  return(
+    <InfoContainer>
+      {HandleInfo(params)}
+      <RestaurantPhoto src={`/rest-photos/${params.name}.jpeg`} />
     </InfoContainer>
+  )
+}
+
+function HandleReviews(params) {
+  const review_path = `/${params.name}/review`;
+  return(
+    <ReviewContainer>
+      <ReviewTitleContainer>
+        <ReviewsTopTitle>Reviews</ReviewsTopTitle>
+        <CreateReview to={review_path}>
+          <Plus src="/CreateReviewPlus.png" />
+          <h2
+            style={{ marginTop: "5%", marginBottom: "5%", gridColumn: "2" }}
+          >
+            Create Review
+          </h2>
+        </CreateReview>
+      </ReviewTitleContainer>
+      <LoadReviews />
+    </ReviewContainer>
   );
 }
 
 function RestaurantDetail() {
   const params = useParams();
-  const review_path = `/${params.name}/review`;
   return (
     <DetailContainer>
-      <HandleInfo />
-      <ReviewContainer>
-        <ReviewTitleContainer>
-          <ReviewsTopTitle>Reviews</ReviewsTopTitle>
-          <CreateReview to={review_path}>
-            <Plus src="/CreateReviewPlus.png" />
-            <h2
-              style={{ marginTop: "5%", marginBottom: "5%", gridColumn: "2" }}
-            >
-              Create Review
-            </h2>
-          </CreateReview>
-        </ReviewTitleContainer>
-        <LoadReviews />
-      </ReviewContainer>
+      {HandleRestaurant(params)}
+      {HandleReviews(params)}
     </DetailContainer>
   );
 }
@@ -310,7 +312,7 @@ const ResContainer = styled.div`
   max-height: inherit;
   max-width: 100vw;
   display: grid;
-  grid-template-rows: auto-fit;
+  grid-template-rows: 20% 20%;
   flex-direction: column;
   grid-column: 1;
 `;
@@ -329,8 +331,8 @@ const RestaurantStars = styled.div`
 `;
 
 const Star = styled.img`
-  width: 45px;
-  height: 45px;
+  width: 55px;
+  height: 55px;
   padding-right: 2%;
 `;
 
