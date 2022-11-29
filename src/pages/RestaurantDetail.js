@@ -228,6 +228,9 @@ function RestaurantDetail() {
             <h2 style={{marginTop: "5%", marginBottom: "5%", gridColumn: "2"}}>Create Review</h2>
           </CreateReview>
         </ReviewTitleContainer>
+        <p>
+          HERE
+        </p>
         <LoadReviews />
       </ReviewContainer>
     </DetailContainer>

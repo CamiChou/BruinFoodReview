@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import mainPage from "./mainPage.css";
+import mainPage from "./restaurantBox.css";
 
 import { db } from "../../firebase.js";
 import { ref, get, child } from "firebase/database";
@@ -58,14 +58,10 @@ function RestaurantBox(props) {
     restaurant_tiles = restaurants.map((rest, id) => (
       <div key={id} className="Tile">
         <h1 className="Text">{rest.name}</h1>
-        <br />
-        <img
-          src={rest.url}
-          style={{
-            width: "15vw",
-            padding: "2%",
-            alignContent: "central",
-          }}
+        <br/>
+        <img 
+            src={rest.url}
+            className = "restImage"
         />
         <br />
         <h4>Type: {rest.type} </h4>

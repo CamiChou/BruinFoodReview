@@ -1,0 +1,30 @@
+.Box
+{   
+    background-color: #EFEEEE;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+.Tile
+{
+    display: flex;
+    flex-direction: column;
+    float:right;
+    width: 60%;
+    margin: auto;
+    margin-top: 5%; 
+    height: 40%;
+    background-color: #D9D9D9;;
+    padding: 2%;
+    border-radius: 25px;
+    resize:both;
+}
+
+
+.restImage
+{
+    width: 40%;
+    height: 20%
+}
