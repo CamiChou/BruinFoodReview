@@ -20,7 +20,26 @@ const CreateReview = ({ pageName }) => {
     )
       .then((snapshot) => {
         if (snapshot.exists()) {
-          return snapshot.val();
+          
+          const reviews = snapshot.val();
+          console.log(reviews)
+          next_id = reviews.metadata.next_id;
+
+          set(child(dbRef, `reviews/bplate/${next_id}`), {
+            // TODO: upvotes, and user
+            content: reviewContent,
+            stars: stars,
+            timestamp: Date.now(),
+            // upvotes: 3,
+            user: "cami",
+          });
+          set(child(dbRef, `reviews/bplate/metadata/next_id`), next_id + 1);
+          setStars(0);
+          setReviewContent("");
+          // alert(stars)
+          alert("review submitted!")
+        } else {
+          console.error(`Data does not exist reviews/bplate/${next_id}`);
         }
         return -1;
       })

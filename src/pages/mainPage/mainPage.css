@@ -1,23 +1,16 @@
-.Box
-{
-    background-color: #EFEEEE;
-    display: flex;
-    flex-direction: column;
-}
-
-
-
-.Tile
+.split
 {
     display: flex;
-    flex-direction: column;
-    float:right;
-    width: 60%;
-    margin: auto;
-    margin-top: 5%; 
-    height: 40%;
-    background-color: #D9D9D9;;
-    padding: 2%;
-    border-radius: 25px;
-    resize:both;
+    flex-direction: row;
 }
+
+.filterbox
+{
+    flex: 30%;
+}
+
+.restbox
+{
+    flex: 60%;
+    overflow-y: auto;
+} 

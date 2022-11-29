@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import styles from "./styles.css";
+import styles from "./filterBox.css";
 import styled from "styled-components";
-
 import { db } from "../../firebase.js";
 import { ref, get, child } from "firebase/database";
 
@@ -9,10 +8,12 @@ const theme = {
   grayDefault: {
     default: "#757575",
     hover: "#90a4ae",
+    onClick: "#FF0000",
   },
   blueClick: {
     default: "#3284bf",
     hover: "#90a4ae",
+    onClick: "#FF0000",
   },
 };
 
@@ -23,6 +24,9 @@ const Button = styled.button`
   outline: 0;
   transition: ease background-color 250ms;
   margin: 5px 5px;
+  &::click {
+    background-color: ${(props) => theme[props.theme].onClick};
+  }
   &:hover {
     background-color: ${(props) => theme[props.theme].hover};
   }
@@ -56,6 +60,17 @@ async function getFilteredResturants(name, setFilter) {
 
 function FilterBox(props) {
   const filter_buttons = [
+    {
+      key: "general",
+      name: "Reset",
+      buttons: [
+        {
+          key: "all",
+          name: "All Restaurants",
+        },
+      ],
+    },
+
     {
       key: "location",
       name: "Type",
@@ -100,7 +115,7 @@ function FilterBox(props) {
         },
         {
           key: "italian",
-          name: "Italia",
+          name: "Italian",
         },
         {
           key: "asian",
@@ -143,7 +158,7 @@ function FilterBox(props) {
         },
         {
           key: "lunch",
-          name: "Lunc",
+          name: "Lunch",
         },
         {
           key: "dinner",
@@ -179,7 +194,8 @@ function FilterBox(props) {
   return (
     <div className="mainBG">
       <div className="filterBox">
-        <div className="filterBoxTitle">Filters</div>
+        <div className="filterBoxTitle">Filters
+        </div>
         {button_grid}
       </div>
     </div>
