@@ -20,27 +20,6 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      get(dbRef)
-        .then((snapshot) => {
-          if (snapshot.exists()) {
-            let data_val = snapshot.val();
-            setData(JSON.stringify(data_val, null, 4));
-          } else {
-            console.log("No data available");
-          }
-          setLoading(false);
-        })
-        .catch((error) => {
-          setLoading(false);
-          console.error(error);
-        });
-    };
-
-    fetchData();
-  }, []);
   return (
     <Router>
       <Header />

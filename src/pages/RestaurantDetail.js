@@ -1,5 +1,5 @@
 //hooks
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useCallback } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
@@ -11,284 +11,280 @@ import userEvent from "@testing-library/user-event";
 import { fetchSignInMethodsForEmail, getAuth } from "firebase/auth";
 import { FieldValue } from "firebase/firestore";
 
-const dbRef = ref(db);
-
-async function LoadRestaurantData(restName) {
-  const resPath = `restaurants/${restName}/`;
-  let restaurant = await get(child(dbRef, resPath)).then((snapshot) => {
-    let resInfo = {};
-    if (snapshot.exists()) {
-      const resObject = snapshot.val();
-      resInfo = {
-        name: resObject.name,
-        desc: resObject.desc,
-        loc: resObject.location,
-      };
-    } else {
-      console.error(`${resPath} does not exist`);
-    }
-    return resInfo;
-  });
-
-  return restaurant;
-}
-
-async function LoadStarData(restName) {
-  const starPath = `reviews/${restName}/metadata/stars`;
-  let starAverage = await get(child(dbRef, starPath)).then((snapshot) => {
-    if (snapshot.exists()) {
-      return snapshot.val();
-    }
-    return 0;
-  });
-  return starAverage;
-}
-
-async function LoadReviewData(restName) {
-  const user = getAuth().currentUser;
-  // TODO check if logged in
-
-  //const reviewsRef = query(ref(db, "reviews"));
-  var userUpvotes = {};
-  if (user != null) {
-    let upvotePath = `users/${user.uid}/reviews/${restName}`;
-    userUpvotes = await get(child(dbRef, upvotePath)).then((snapshot) => {
-      if (snapshot.exists()) {
-        return snapshot.val();
-      }
-      return {};
-    });
-  }
-
-  let reviewPath = `reviews/${restName}`;
-  let reviews = await get(child(dbRef, reviewPath)).then((snapshot) => {
-    const reviews = [];
-    if (snapshot.exists()) {
-      // lists all reviews and its content
-      snapshot.forEach((child) => {
-        const info = child.val();
-        const key = child.key;
-        if (Number.isInteger(Number(key))) {
-          const review = {
-            id: child.key,
-            content: info.content,
-            name: info.user,
-            stars: info.stars,
-            upvoteCount: info.upvotes,
-            upvoteStatus: userUpvotes[key],
-          };
-          reviews.push(review);
-        }
-      });
-    }
-    return reviews;
-  });
-  return reviews;
-}
-
-function RenderStars(numStars) {
-  if (numStars === undefined) {
-    numStars = 0; // TODO check why undefined
-  }
-  let off = Array(5 - numStars)
-    .fill(null)
-    .map((elem, id) => {
-      return <Star key={id} src={"/Star1.png"}></Star>;
-    });
-  let on = Array(numStars)
-    .fill(null)
-    .map((elem, id) => {
-      return <Star key={5 + id} src={"/Star2.png"}></Star>;
-    });
-  return (
-    <div>
-      {on}
-      {off}
-    </div>
-  );
-}
-
-async function upvote(e, inc) {
+const RestaurantDetail = () => {
+  const dbRef = ref(db);
+  const params = useParams();
+  const restName = params.name;
   const auth = getAuth();
-  const user = auth.currentUser;
-  const elem = e.target;
-  const review_id = elem.getAttribute("review-id");
-  const rest_name = elem.getAttribute("rest-name");
-  const rest_path = `reviews/${rest_name}/${review_id}`;
-  // TODO check if signed in
-  let existing_upvote = await get(
-    child(dbRef, `users/${user.uid}/reviews/${rest_name}/${review_id}`)
-  )
-    .then((snapshot) => {
+  const [forceFetchRestaurant, setForceFetchRestaurant] = useState(true);
+  const [forceFetchReviews, setForceFetchReviews] = useState(true);
+  const [, updateState] = useState();
+  const forceUpdate = useCallback(() => updateState({}), []);
+
+  const renderStars = (numStars) => {
+    if (numStars === undefined) {
+      numStars = 0; // TODO check why undefined
+    }
+    let off = Array(5 - numStars)
+      .fill(null)
+      .map((elem, id) => {
+        return <Star key={id} src={"/Star1.png"}></Star>;
+      });
+    let on = Array(numStars)
+      .fill(null)
+      .map((elem, id) => {
+        return <Star key={5 + id} src={"/Star2.png"}></Star>;
+      });
+    return (
+      <div>
+        {on}
+        {off}
+      </div>
+    );
+  };
+
+  const handleUpvote = async (event, increment) => {
+    const user = auth.currentUser;
+    const target = event.target;
+    const reviewId = target.getAttribute("review-id");
+
+    let existingUpvote = await get(
+      child(dbRef, `users/${user.uid}/reviews/${restName}/${reviewId}`)
+    ).then((snapshot) => {
       if (snapshot.exists()) {
         return snapshot.val();
       }
       return 0;
-    })
-    .catch((error) => {
-      console.error(error.message);
     });
-  let cur_upvotes = await get(child(dbRef, `${rest_path}/upvotes`))
-    .then((snapshot) => {
+    let curUpvoteCount = await get(
+      child(dbRef, `reviews/${restName}/${reviewId}/upvotes`)
+    ).then((snapshot) => {
       if (snapshot.exists()) {
         return snapshot.val();
       }
       return -1;
-    })
-    .catch((error) => {
-      console.error(error.message);
     });
-  let user_upvote;
-  let new_upvotes;
-  console.log(review_id);
-  if (existing_upvote == 0) {
-    user_upvote = inc;
-    new_upvotes = cur_upvotes + inc;
-  } else if (existing_upvote != inc) {
-    user_upvote = inc;
-    new_upvotes = cur_upvotes + 2 * inc;
-  } else {
-    user_upvote = null;
-    new_upvotes = cur_upvotes - inc;
-  }
-  update(child(dbRef, `users/${user.uid}/reviews/${rest_name}`), {
-    [review_id]: user_upvote,
-  });
-  set(child(dbRef, `${rest_path}/upvotes`), new_upvotes);
-}
-
-function HandleRestaurantInfo() {
-  const params = useParams();
-  const photoPath = `/rest-photos/${params.name}.jpeg`;
-  const [averageStars, setAverageStars] = useState(5);
-  const [restaurantData, setRestaurantData] = useState({});
-  const [isLoading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchData() {
-      const newAverageStars = await LoadStarData(params.name);
-      const newRestaurantData = await LoadRestaurantData(params.name);
-      setAverageStars(newAverageStars);
-      setRestaurantData(newRestaurantData);
-      setLoading(false);
+    let newUpvoteCount;
+    let userUpvote;
+    if (existingUpvote == 0) {
+      userUpvote = increment;
+      newUpvoteCount = curUpvoteCount + increment;
+    } else if (existingUpvote != increment) {
+      userUpvote = increment;
+      newUpvoteCount = curUpvoteCount + 2 * increment;
+    } else {
+      userUpvote = null;
+      newUpvoteCount = curUpvoteCount - increment;
     }
-    fetchData();
-  }, [averageStars]);
+    update(child(dbRef, `users/${user.uid}/reviews/${restName}`), {
+      [reviewId]: userUpvote,
+    });
+    set(
+      child(dbRef, `reviews/${restName}/${reviewId}/upvotes`),
+      newUpvoteCount
+    );
+    setForceFetchReviews(true);
+  };
 
-  let name = "Loading Name...";
-  let location = "Loading Location...";
-  let description = "Loading Description...";
-  if (!isLoading) {
-    name = restaurantData.name;
-    location = restaurantData.loc;
-    description = restaurantData.desc;
-  }
-  return (
-    <RestaurantContainer>
-      <RestaurantTitle>{name}</RestaurantTitle>
-      <RestaurantStars>{RenderStars(averageStars)}</RestaurantStars>
-      <RestaurantLocation>{location}</RestaurantLocation>
-      <RestaurantDescription>{description}</RestaurantDescription>
-    </RestaurantContainer>
-  );
-}
+  const getStarData = async () => {
+    const starPath = `reviews/${restName}/metadata/stars`;
+    let starAverage = await get(child(dbRef, starPath)).then((snapshot) => {
+      if (snapshot.exists()) {
+        return snapshot.val();
+      }
+      return 0;
+    });
+    return starAverage;
+  };
 
-function HandleRestaurant(restName) {
-  return (
-    <InfoContainer>
-      {HandleRestaurantInfo(restName)}
-      <RestaurantPhoto src={`/rest-photos/${restName}.jpeg`} />
-    </InfoContainer>
-  );
-}
+  const getReviewData = async () => {
+    const user = auth.currentUser;
+    // TODO check if logged in
 
-function HandleReviewInfo(restName) {
-  const [revData, setRevData] = useState([]);
-  const [isLoading, setLoading] = useState(true);
-  const user = getAuth().currentUser;
-  const authenticated = user != null;
-
-  useEffect(() => {
-    async function fetchData() {
-      const reviews = await LoadReviewData(restName);
-      setRevData(reviews);
-      setLoading(false);
+    //const reviewsRef = query(ref(db, "reviews"));
+    var userUpvotes = {};
+    if (user != null) {
+      let upvotePath = `users/${user.uid}/reviews/${restName}`;
+      userUpvotes = await get(child(dbRef, upvotePath)).then((snapshot) => {
+        if (snapshot.exists()) {
+          return snapshot.val();
+        }
+        return {};
+      });
     }
-    fetchData();
-  }, [revData]);
 
-  let reviewContent;
-  if (isLoading) {
-    reviewContent = <HoldReviews>Loading Reviews...</HoldReviews>;
-  } else if (revData.length == 0) {
-    reviewContent = (
-      <HoldReviews>
-        No reviews yet! Be the first to create a review!
-      </HoldReviews>
+    let reviewPath = `reviews/${restName}`;
+    let reviews = await get(child(dbRef, reviewPath)).then((snapshot) => {
+      const reviews = [];
+      if (snapshot.exists()) {
+        // lists all reviews and its content
+        snapshot.forEach((child) => {
+          const info = child.val();
+          const key = child.key;
+          if (Number.isInteger(Number(key))) {
+            const review = {
+              id: child.key,
+              content: info.content,
+              name: info.user,
+              stars: info.stars,
+              upvoteCount: info.upvotes,
+              upvoteStatus: userUpvotes[key],
+            };
+            reviews.push(review);
+          }
+        });
+      }
+      return reviews;
+    });
+    return reviews;
+  };
+  const getRestaurantData = async () => {
+    const resPath = `restaurants/${restName}/`;
+    let restaurant = await get(child(dbRef, resPath)).then((snapshot) => {
+      let resInfo = {};
+      if (snapshot.exists()) {
+        const resObject = snapshot.val();
+        resInfo = {
+          name: resObject.name,
+          desc: resObject.desc,
+          loc: resObject.location,
+        };
+      } else {
+        console.error(`${resPath} does not exist`);
+      }
+      return resInfo;
+    });
+
+    return restaurant;
+  };
+
+  const HandleRestaurant = () => {
+    const [averageStars, setAverageStars] = useState(5);
+    const [restaurantData, setRestaurantData] = useState({});
+    const [isLoading, setLoading] = useState(true);
+
+    useEffect(() => {
+      async function fetchData() {
+        if (forceFetchRestaurant) {
+          const newAverageStars = await getStarData(params.name);
+          const newRestaurantData = await getRestaurantData(params.name);
+          setAverageStars(newAverageStars);
+          setRestaurantData(newRestaurantData);
+          setForceFetchRestaurant(false);
+        }
+        setLoading(false);
+      }
+      fetchData();
+    }, [averageStars,forceFetchRestaurant]);
+
+    let name = "Loading Name...";
+    let location = "Loading Location...";
+    let description = "Loading Description...";
+    if (!isLoading) {
+      name = restaurantData.name;
+      location = restaurantData.loc;
+      description = restaurantData.desc;
+    }
+    let restaurantContent = (
+      <RestaurantContainer>
+        <RestaurantTitle>{name}</RestaurantTitle>
+        <RestaurantStars>{renderStars(averageStars)}</RestaurantStars>
+        <RestaurantLocation>{location}</RestaurantLocation>
+        <RestaurantDescription>{description}</RestaurantDescription>
+      </RestaurantContainer>
     );
-  } else {
-    reviewContent =  (
-      <HoldReviews>
-        {revData.map((rev, id) => (
-          <ReviewBase key={id}>
-            <ReviewTitleContainer>
-              <UserName>{rev.name}</UserName>
-              <ReviewStars>{RenderStars(rev.stars)}</ReviewStars>
-            </ReviewTitleContainer>
-            <ReviewContent>{rev.content}</ReviewContent>
-            <p> {rev.upvoteCount}</p>
-            <button
-              disabled={!authenticated}
-              review-id={rev.id}
-              rest-name={restName}
-              onClick={(e) => upvote(e, 1)}
-            >
-              Up {rev.upvoteStatus == 1 ? "✓" : ""}
-            </button>
-            <button
-              disabled={!authenticated}
-              review-id={rev.id}
-              rest-name={restName}
-              onClick={(e) => upvote(e, -1)}
-            >
-              Down {rev.upvoteStatus == -1 ? "✓" : ""}
-            </button>
-          </ReviewBase>
-        ))}
-      </HoldReviews>
+    return (
+      <InfoContainer>
+        {restaurantContent}
+        <RestaurantPhoto src={`/rest-photos/${restName}.jpeg`} />
+      </InfoContainer>
     );
-  }
-  return reviewContent;
-}
+  };
+  const HandleReviews = () => {
+    const [revData, setRevData] = useState([]);
+    const [isLoading, setLoading] = useState(true);
+    const user = auth.currentUser;
+    const authenticated = user != null;
 
-function HandleReviews(restName) {
-  const review_path = `/${restName}/review`;
-  return (
-    <ReviewContainer>
-      <ReviewTitleContainer>
-        <ReviewsTopTitle>Reviews</ReviewsTopTitle>
-        <CreateReview to={review_path}>
-          <Plus src="/CreateReviewPlus.png" />
-          <h2 style={{ marginTop: "5%", marginBottom: "5%", gridColumn: "2" }}>
-            Create Review
-          </h2>
-        </CreateReview>
-      </ReviewTitleContainer>
-      {HandleReviewInfo(restName)}
-    </ReviewContainer>
-  );
-}
+    useEffect(() => {
+      async function fetchData() {
+        if (forceFetchReviews) {
+          const reviews = await getReviewData(restName);
+          setRevData(reviews);
+          setForceFetchReviews(false);
+        }
+        setLoading(false);
+      }
+      fetchData();
+    }, [revData,forceFetchReviews]);
 
-function RestaurantDetail() {
-  const params = useParams();
-  const restName = params.name;
+const d = new Date();
+    let reviewContent;
+    if (isLoading) {
+      reviewContent = <HoldReviews>Loading Reviews...</HoldReviews>;
+    } else if (revData.length == 0) {
+      reviewContent = (
+        <HoldReviews>
+          No reviews yet! Be the first to create a review!
+        </HoldReviews>
+      );
+    } else {
+      reviewContent = (
+        <HoldReviews>
+          {revData.map((rev, id) => (
+            <ReviewBase key={id}>
+              <ReviewTitleContainer>
+                <UserName>{rev.name}</UserName>
+                <ReviewStars>{renderStars(rev.stars)}</ReviewStars>
+              </ReviewTitleContainer>
+              <ReviewContent>{rev.content}</ReviewContent>
+              <p> {rev.upvoteCount}</p>
+              <button
+                disabled={!authenticated}
+                review-id={rev.id}
+                rest-name={restName}
+                onClick={(e) => { handleUpvote(e, 1);}}
+              >
+                Up {rev.upvoteStatus == 1 ? "✓" : ""}
+              </button>
+              <button
+                disabled={!authenticated}
+                review-id={rev.id}
+                rest-name={restName}
+                onClick={(e) => {handleUpvote(e, -1)}}
+              >
+                Down {rev.upvoteStatus == -1 ? "✓" : ""}
+              </button>
+            </ReviewBase>
+          ))}
+        </HoldReviews>
+      );
+    }
+    return (
+      <ReviewContainer>
+        <ReviewTitleContainer>
+          <ReviewsTopTitle>Reviews</ReviewsTopTitle>
+          <CreateReview to={`/${restName}/review`}>
+            <Plus src="/CreateReviewPlus.png" />
+            <h2
+              style={{ marginTop: "5%", marginBottom: "5%", gridColumn: "2" }}
+            >
+              Create Review
+            </h2>
+          </CreateReview>
+        </ReviewTitleContainer>
+        {reviewContent}
+      </ReviewContainer>
+    );
+  };
+
   return (
     <DetailContainer>
       {HandleRestaurant(restName)}
       {HandleReviews(restName)}
     </DetailContainer>
   );
-}
+};
 
 const InfoContainer = styled.div`
   display: grid;
