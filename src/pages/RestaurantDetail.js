@@ -61,6 +61,18 @@ function LoadResPic() {
   return <RestaurantPhoto src={`/rest-photos/${params.name}.jpeg`} />;
 }
 
+async function GrabStars(restName) {
+  let total_stars = await get(
+    child(dbRef, `reviews/${restName}/metadata/stars`)
+  ).then((snapshot) => {
+    if (snapshot.exists()) {
+      return snapshot.val();
+    }
+    return 0;
+  });
+  return total_stars;
+}
+
 async function GrabReviewsNew(restName) {
   const auth = getAuth();
   const user = auth.currentUser;
@@ -193,9 +205,8 @@ function LoadReviews() {
 
   useEffect(() => {
     async function fetchData() {
-      const data = await GrabReviewsNew(params.name);
-      data.forEach((rev) => {});
-      setRevData(data);
+      const reviews = await GrabReviewsNew(params.name);
+      setRevData(reviews);
       setLoading(false);
     }
     fetchData();
@@ -245,15 +256,21 @@ function LoadReviews() {
   }
 }
 
-function HandleInfo(props) {
-  const [resName, setResName] = useState([]);
-  const [resDesc, setResDesc] = useState([]);
-
+function HandleInfo() {
+  const params = useParams();
+  const [totalStars, setTotalStars] = useState(5);
+  useEffect(() => {
+    async function fetchData() {
+      const totalStars = await GrabStars(params.name);
+      setTotalStars(totalStars);
+    }
+    fetchData();
+  }, [totalStars]);
   return (
     <InfoContainer>
       <ResContainer>
         <LoadResTitle />
-        <RestaurantStars>{RenderStars(5)}</RestaurantStars>
+        <RestaurantStars>{RenderStars(totalStars)}</RestaurantStars>
         <LoadResDesc />
       </ResContainer>
       <LoadResPic />
