@@ -58,23 +58,31 @@ function RestaurantBox(props) {
     restaurant_tiles = <p>Restaurants are loading!</p>;
   } else {
     restaurant_tiles = restaurants.map((rest, id) => (
+      
       <Link to={`/${rest.key}`}>
       <div key={id} className="Tile">
-        <h1 className="Text">{rest.name}</h1>
-        <br />
-        <img
-          src={rest.url}
-          style={{
-            width: "15vw",
-            padding: "2%",
-            alignContent: "central",
-          }}
-        />
-        <br />
-        <h4>Type: {rest.type} </h4>
-        <br />
-        <h4>Location: {rest.loc}</h4>
-      </div></Link>
+        
+        <div className="parent">
+          <img
+            className="restImages"
+            src={rest.url}
+            style={{
+              width: "15vw",
+              padding: "2%",
+              alignContent: "central",
+            }}
+          />
+          <h1 className="Text">{rest.name}</h1>
+          <div className="typeDisplay">
+            <h4> Type: {rest.type} </h4>
+          </div>
+          <div className="restLocation">
+            <h4>Location: {rest.loc}</h4>
+          </div>
+          
+        </div>
+      </div>
+      </Link>
     ));
   }
 
