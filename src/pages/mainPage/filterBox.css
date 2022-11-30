@@ -10,9 +10,9 @@
 .filterBox
 {
   display: grid;
-  grid-template-rows: 6% 8% 15% 15% 25% 10%;
+  grid-template-rows: 3.5% 8% 15% 15% 25% 10%;
   margin: 2%;
-  margin-top: 2%;
+  margin-top: 5%;
   padding: 3%;
   overflow-y: auto;
   height: 100%;
@@ -41,9 +41,10 @@
   width: 95%;
   background-color: #EFEEEE;
   text-align: center;
-  border-radius: 15px;
+  border-radius: 25px;
   height: 100%;
   justify-content: center;
+  font-weight: bold;
   font-size: x-large;
 }
 

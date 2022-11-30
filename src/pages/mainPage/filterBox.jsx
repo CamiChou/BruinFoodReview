@@ -7,8 +7,9 @@ import { ref, get, child } from "firebase/database";
 
 const Button = styled.button`
   background-color: #EFEEEE;
-  padding: 5px 10px;
-  border-radius: 3px;
+  padding: 8px 12px;
+  font-weight: bold;
+  border-radius: 25px;
   outline: 0;
   transition: ease background-color 250ms;
   margin: 5px 5px;
@@ -22,6 +23,7 @@ const ButtonToggle = styled(Button)`
   ${({ active }) =>
     active &&
     `
+    color: #EFEEEE;
     background-color: #3284bf;
     &:hover {
       background-color: #3284bf;
@@ -57,7 +59,7 @@ function FilterBox(props) {
       buttons: [
         {
           key: "all",
-          name: "Reset",
+          name: "Reset Filters",
         },
       ],
     },
