@@ -98,10 +98,10 @@ const RestaurantBox = (props) => {
             />
             <h1 className="Text">{rest.name}</h1>
             <div className="typeDisplay">
-              <h4> Type: {rest.type} </h4>
+              <h3> Type: {rest.type} </h3>
             </div>
             <div className="restLocation">
-              <h4>Location: {rest.loc}</h4>
+              <h3>Location: {rest.loc}</h3>
             </div>
             <div className="stars">
             {renderStars(Math.round(rest.stars))}
@@ -120,7 +120,7 @@ export default RestaurantBox;
 
 
 const Star = styled.img`
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   padding-right: 1%;
 `;

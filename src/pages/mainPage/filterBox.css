@@ -10,7 +10,7 @@
 .filterBox
 {
   display: grid;
-  grid-template-rows: 8% 10% 22% 15% 30% 10%;
+  grid-template-rows: 6% 8% 15% 15% 25% 10%;
   margin: 2%;
   margin-top: 2%;
   padding: 3%;
