@@ -273,6 +273,14 @@ const RestaurantDetail = () => {
       <ReviewContainer>
         <ReviewTitleContainer>
           <ReviewsTopTitle>Reviews</ReviewsTopTitle>
+          <select name="sort">
+            <option value="upvotes-descending">Upvotes (High to Low)</option>
+            <option value="upvotes-ascending">Upvotes (Low to High)</option>
+            <option value="stars-descending">Stars (High to Low)</option>
+            <option value="stars-ascending">Stars (Low to High)</option>
+            <option value="time-descending">Time (Newest to Oldest)</option>
+            <option value="time-ascending">Time (Oldest to Newest)</option>
+          </select>
           <CreateReview to={`/${restName}/review`}>
             <Plus src="/CreateReviewPlus.png" />
             <h2
