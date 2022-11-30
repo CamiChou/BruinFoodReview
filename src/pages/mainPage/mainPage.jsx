@@ -9,18 +9,10 @@ function MainPage() {
   const [filter, setFilter] = useState([]);
   
   return (
-    <div className="mainPage">
-            <h1 className="font-weight-light">Main Page</h1>
-            <p>
-              This is where we will have all resturants and filters
-            </p>
-          <div className="split">
-
-            <div className='filterbox'><FilterBox filter={filter} setFilter={setFilter}/></div>
-            <div className='restbox'><RestaurantBox filter={filter} setFilter={setFilter}/></div>
-
-          </div>
-    </div>
+      <div className="split">
+        <div className='filterbox'><FilterBox filter={filter} setFilter={setFilter}/></div>
+        <div className='restbox'><RestaurantBox filter={filter} setFilter={setFilter}/></div>
+      </div>
   );
 }
 
