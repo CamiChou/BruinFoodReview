@@ -240,21 +240,11 @@ const RestaurantDetail = () => {
           <span style={{color: "white"}}>Location: </span>
           <span style={{color: "#FFD100"}}>{location}</span>
         </h3>
-        {/* <p
-          style={{
-            fontWeight: "bold",
-            color: "#FFD100",
-            fontSize: "larger",
-            margin: "0%",
-          }}
-        >
-          
-        </p> */}
       </div>
     );
     let blurbTags = (
       <div style={{ display: "grid" }}>
-        <h3
+        {/* <h3
           style={{
             gridRow: "1",
             marginTop: "2%",
@@ -263,7 +253,7 @@ const RestaurantDetail = () => {
           }}
         >
           Tags
-        </h3>
+        </h3> */}
         <Tags>
           {holdTags.map((id, tag) => (
             <BlurbTag key={id}>{id}</BlurbTag>
