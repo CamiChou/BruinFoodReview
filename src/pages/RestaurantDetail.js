@@ -495,7 +495,7 @@ const BackButton = styled.div`
   cursor: pointer;
   border-radius: 25px;
   height: min-content;
-  width: 8%;
+  width: 6%;
   position: relative;
   font-weight: bold;
   margin-top: 2%;  
@@ -504,7 +504,7 @@ const BackButton = styled.div`
   padding-left: 2%;
   padding-top: 1%;
   padding-bottom: 1%;
-`
+`;
 
 const RestaurantLocation = styled.div`
   color: #efeeee;
