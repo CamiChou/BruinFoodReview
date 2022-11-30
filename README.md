@@ -26,7 +26,7 @@ npm start
 which starts the client-side app as well as listen on the server, meaning the app should open in your browser. Note that it may take some time for npm to start the server. If it does not, enter http://localhost:3000/ into your browser and you should be good to go. Once the app has opened, you will need to create a BruinYelp account in order to post reviews. This can be done relatively easily using your google account information.
 
 ## Technology
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app)
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) for our frontend development and [Firebase](https://firebase.google.com/) for our backend
 
 
 ## Creators
