@@ -154,6 +154,7 @@ const RestaurantDetail = () => {
           name: resObject.name,
           desc: resObject.desc,
           loc: resObject.location,
+          tags: resObject.tags
         };
       } else {
         console.error(`${resPath} does not exist`);
@@ -207,6 +208,7 @@ const RestaurantDetail = () => {
     );
   };
 
+  
   const HandleRestBlurb = () => {
     const [restaurantData, setRestaurantData] = useState({});
     const [isLoading, setLoading] = useState(true);
@@ -214,42 +216,48 @@ const RestaurantDetail = () => {
     useEffect(() => {
       async function fetchData() {
         if (forceFetchRestaurant) {
-          const newAverageStars = await getStarData(params.name);
           const newRestaurantData = await getRestaurantData(params.name);
-          setAverageStars(newAverageStars);
           setRestaurantData(newRestaurantData);
           setForceFetchRestaurant(false);
         }
         setLoading(false);
       }
       fetchData();
-    }, [averageStars, forceFetchRestaurant]);
+    }, [forceFetchRestaurant]);
 
-    let name = "Loading Name...";
+    let tags = "Loading Tags...";
     let location = "Loading Location...";
-    let description = "Loading Description...";
+    let holdTags = [];
     if (!isLoading) {
-      name = restaurantData.name;
       location = restaurantData.loc;
-      description = restaurantData.desc;
+      tags = restaurantData.tags;
+      holdTags = tags.split(",")
     }
-    let restaurantContent = (
-      <RestaurantContainer>
-        <RestaurantTitle>{name}</RestaurantTitle>
-        <RestaurantStars>
-          {renderStars(Math.round(averageStars))}
-        </RestaurantStars>
-        <RestaurantDescription>{description}</RestaurantDescription>
-      </RestaurantContainer>
+    let blurbLocation = (
+      <div>
+        <h3 style={{marginTop: "0%", marginBottom: "5%", fontSize: "x-large"}}>Location</h3>
+        <p style={{fontWeight: "bold", color: "#FFD100", fontSize: "larger"}}>{location}</p>
+      </div>
+    );
+    let blurbTags = (
+      <div style = {{display: "grid"}}>
+        <h3 style = {{gridRow: "1", marginBottom: "5%", fontSize: "x-large"}}>Tags</h3>
+        <Tags>
+            {
+              holdTags.map((id,tag) => (
+                <BlurbTag  key={id}>{id}</BlurbTag>
+              ))}
+        </Tags>
+      </div>
     );
     return (
-      <InfoContainer>
-        {restaurantContent}
-        <RestaurantPhoto src={`/rest-photos/${restName}.jpeg`} />
-      </InfoContainer>
+      <BlurbContainer>
+        {blurbLocation}
+        {blurbTags}
+      </BlurbContainer>
     );
   };
-
+  
   const HandleReviews = () => {
     const [revData, setRevData] = useState([]);
     const [isLoading, setLoading] = useState(true);
@@ -349,6 +357,7 @@ const RestaurantDetail = () => {
       {HandleRestaurant(restName)}
       <div style={{display: "grid", gridTemplateColumns: "65%"}}>
         {HandleReviews(restName)}
+        {HandleRestBlurb(restName)}
       </div>
     </DetailContainer>
   );
@@ -427,6 +436,41 @@ const RestaurantPhoto = styled.img`
   object-fit: contain;
   margin-top: auto;
   margin-bottom: auto;
+`;
+
+const BlurbContainer = styled.div`
+  background-color: #3284bf;
+  color: #efeeee;
+  border-radius: 18px;
+  height: min-content;
+  grid-column: 2;
+  margin-left: 5%;
+  margin-top: 10%;
+  max-width: 20vw;
+  padding: 5%;
+  display: grid;
+`;
+
+const Tags = styled.div`
+  gridRow: 2;
+  display: grid;
+  flexDirection: column;
+  grid-template-columns: repeat(3,1fr);
+  row-gap: 10%;
+`;
+
+const BlurbTag = styled.div`
+  display: flex;
+  max-width: fit-content;
+  border-radius: 18px;
+  color: #FFD100;
+  border-color: #FFD100;
+  font-weight: bold;
+  justify-content: center;
+  padding: 5%;
+  border-style: solid;
+  justify-self: center;
+  border-width: 2px;
 `;
 
 const ReviewContainer = styled.div`
