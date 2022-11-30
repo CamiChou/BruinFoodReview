@@ -16,11 +16,9 @@
     float:right;
     width: 90%;
     margin: 2%;
-    height: 40%;
     background-color: #D9D9D9;;
     padding: 2%;
     border-radius: 25px;
-    resize:both;
 }
 
 
@@ -28,7 +26,7 @@
 {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 0.75fr);
     grid-column-gap: 0px;
     grid-row-gap: 0px;
 }
@@ -37,6 +35,9 @@
 
 .restImages{
     grid-area: 1 / 1 / 4 / 2; 
+    object-fit: cover;
+    height: 100%;
+    width: 100%;    
 }
 
 
@@ -52,5 +53,8 @@
 
 .restLocation
 {
-    grid-area: 3 / 2 / 4 / 3; 
+    grid-area: 3 / 2 / 5 / 3;
+
 }
+
+

@@ -6,27 +6,22 @@ import { ref, get, child } from "firebase/database";
 
 const theme = {
   grayDefault: {
-    default: "#757575",
+    default: "#EFEEEE",
     hover: "#90a4ae",
-    onClick: "#FF0000",
   },
   blueClick: {
     default: "#3284bf",
     hover: "#90a4ae",
-    onClick: "#FF0000",
   },
 };
 
 const Button = styled.button`
   background-color: ${(props) => theme[props.theme].default};
   padding: 5px 10px;
-  border-radius: 5px;
+  border-radius: 3px;
   outline: 0;
   transition: ease background-color 250ms;
   margin: 5px 5px;
-  &::click {
-    background-color: ${(props) => theme[props.theme].onClick};
-  }
   &:hover {
     background-color: ${(props) => theme[props.theme].hover};
   }
@@ -194,7 +189,8 @@ function FilterBox(props) {
   return (
     <div className="mainBG">
       <div className="filterBox">
-        <div className="filterBoxTitle">Filters
+        <div className="filterTopBar"> 
+           Filters
         </div>
         {button_grid}
       </div>
