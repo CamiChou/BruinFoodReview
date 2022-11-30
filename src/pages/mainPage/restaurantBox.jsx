@@ -65,9 +65,9 @@ const RestaurantBox = (props) => {
               className="restImages"
               src={rest.url}
               style={{
-                width: "15vw",
-                padding: "2%",
-                alignContent: "central",
+                width: "50%",
+                height: "100%",
+                borderRadius: "20px",
               }}
             />
             <h1 className="Text">{rest.name}</h1>
