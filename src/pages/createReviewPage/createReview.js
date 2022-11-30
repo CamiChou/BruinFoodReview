@@ -13,6 +13,8 @@ const CreateReview = ({ pageName }) => {
   const [reviewContent, setReviewContent] = useState("");
   const [stars, setStars] = useState(0);
   const [authenticated, setAuthenticated] = useState(false);
+  const [restaurantName, setRestaurantName] = useState("");
+  const [isLoadingName, setIsLoadingName] = useState(true);
   const params = useParams();
   const restName = params.name;
   const auth = getAuth();
@@ -20,10 +22,32 @@ const CreateReview = ({ pageName }) => {
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      console.log("AUTH");
       setAuthenticated(user != null);
     });
   }, []);
+
+  useEffect(() => {
+    async function fetchData() {
+      let name = await getRestaurantName();
+      setRestaurantName(name);
+    }
+    fetchData();
+    setIsLoadingName(false);
+  }, []);
+
+  const getRestaurantName = async () => {
+    let name = await get(child(dbRef, `restaurants/${restName}/name`)).then(
+      (snapshot) => {
+        if (snapshot.exists()) {
+          return snapshot.val();
+        } else {
+          console.error(`restaurants/${restName} does not exist`);
+        }
+        return null;
+      }
+    );
+    return name;
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -62,11 +86,11 @@ const CreateReview = ({ pageName }) => {
     navigate(`/${restName}`);
   };
 
-  let submit_button;
+  let submitButton;
 
   if (authenticated) {
     let reviewComplete = reviewContent.length === 0 || stars < 1;
-    submit_button = (
+    submitButton = (
       <div className="submitBtn">
         <input
           disabled={reviewComplete}
@@ -77,16 +101,18 @@ const CreateReview = ({ pageName }) => {
       </div>
     );
   } else {
-    submit_button = (
+    submitButton = (
       <div className="submitAuthError">Log In to Submit Review!</div>
-    ); // TODO: auth should auto update button(?)
+    ); 
   }
 
   return (
     <div id={pageName}>
       <div className="BiggestBox">
         <div className="ReviewContainer">
-          <div className="ReviewTitleContainer">{restName}</div>
+          <div className="ReviewTitleContainer">
+            {isLoadingName ? "Loading Name..." : restaurantName}
+          </div>
           <div className="ReviewTextContainer">
             <form
               className="myForm"
@@ -102,7 +128,7 @@ const CreateReview = ({ pageName }) => {
                 onChange={(event) => setReviewContent(event.target.value)}
                 value={reviewContent}
               />
-              {submit_button}
+              {submitButton}
             </form>
           </div>
         </div>
