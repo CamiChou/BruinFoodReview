@@ -9,7 +9,7 @@ import StarRating from "./createReviewPage/StarRating.js";
 import { useParams } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
-import { FieldValue } from "firebase/firestore";
+import { FieldValue, Timestamp } from "firebase/firestore";
 import { ResultList } from "@appbaseio/reactivesearch";
 
 const RestaurantDetail = () => {
@@ -167,6 +167,7 @@ const RestaurantDetail = () => {
           name: resObject.name,
           desc: resObject.desc,
           loc: resObject.location,
+          tags: resObject.tags
         };
       } else {
         console.error(`${resPath} does not exist`);
@@ -218,17 +219,83 @@ const RestaurantDetail = () => {
         <RestaurantStars>
           {renderStars(Math.round(averageStars))}
         </RestaurantStars>
-        <RestaurantLocation>{location}</RestaurantLocation>
         <RestaurantDescription>{description}</RestaurantDescription>
       </RestaurantContainer>
     );
     return (
       <InfoContainer>
-        {restaurantContent}
+        {getRestaurantContent}
         <RestaurantPhoto src={`/rest-photos/${restName}.jpeg`} />
       </InfoContainer>
     );
   };
+
+  
+  const HandleRestBlurb = () => {
+    const [restaurantData, setRestaurantData] = useState({});
+    const [isLoading, setLoading] = useState(true);
+
+    useEffect(() => {
+      async function fetchData() {
+        if (forceFetchRestaurant) {
+          const newRestaurantData = await getRestaurantData(params.name);
+          setRestaurantData(newRestaurantData);
+          setForceFetchRestaurant(false);
+        }
+        setLoading(false);
+      }
+      fetchData();
+    }, [forceFetchRestaurant]);
+
+    let tags = "Loading Tags...";
+    let location = "Loading Location...";
+    let holdTags = [];
+    if (!isLoading) {
+      location = restaurantData.loc;
+      tags = restaurantData.tags;
+      holdTags = tags.split(",")
+    }
+    let blurbLocation = (
+      <div>
+        <h3 style={{marginTop: "0%", marginBottom: "5%", fontSize: "x-large"}}>Location</h3>
+        <p style={{fontWeight: "bold", color: "#FFD100", fontSize: "larger"}}>{location}</p>
+      </div>
+    );
+    let blurbTags = (
+      <div style = {{display: "grid"}}>
+        <h3 style = {{gridRow: "1", marginBottom: "5%", fontSize: "x-large"}}>Tags</h3>
+        <Tags>
+            {
+              holdTags.map((id,tag) => (
+                <BlurbTag  key={id}>{id}</BlurbTag>
+              ))}
+        </Tags>
+      </div>
+    );
+    return (
+      <BlurbContainer>
+        {blurbLocation}
+        {blurbTags}
+      </BlurbContainer>
+    );
+  };
+  
+  const HandleReviews = () => {
+    const [revData, setRevData] = useState([]);
+    const [isLoading, setLoading] = useState(true);
+    const user = auth.currentUser;
+
+    useEffect(() => {
+      async function fetchData() {
+        if (forceFetchReviews) {
+          const reviews = await getReviewData(restName);
+          setRevData(reviews);
+          setForceFetchReviews(false);
+        }
+        setLoading(false);
+      }
+      fetchData();
+    }, [revData, forceFetchReviews]);
 
   const getReviewContent = () => {
     let reviewContent;
@@ -245,34 +312,38 @@ const RestaurantDetail = () => {
         <HoldReviews>
           {revData.map((rev, id) => (
             <ReviewBase key={id}>
-              <ReviewTitleContainer>
-                <UserName>
-                  {rev.name} {rev.id}
-                </UserName>
+              <ReviewNameContainer>
+                <UserName>{rev.name}</UserName>
                 <ReviewStars>{renderStars(rev.stars)}</ReviewStars>
-              </ReviewTitleContainer>
-              <ReviewContent>{rev.content}</ReviewContent>
-              <p> Upvotes: {rev.upvoteCount}</p>
-              <button
-                className={rev.upvoteStatus == 1 ? "on" : "off"}
-                disabled={!authenticated}
-                review-id={rev.id}
-                onClick={(e) => {
-                  handleUpvote(e, 1);
-                }}
-              >
-                Up
-              </button>
-              <button
-                className={rev.upvoteStatus == -1 ? "on" : "off"}
-                disabled={!authenticated}
-                review-id={rev.id}
-                onClick={(e) => {
-                  handleUpvote(e, -1);
-                }}
-              >
-                Down
-              </button>
+              </ReviewNameContainer>
+                <ReviewBottomContainer>
+                <ReviewContentContainer>{rev.content}</ReviewContentContainer>
+                <ReviewUpvoteContainer>
+                  <button
+                    disabled={!authenticated}
+                    review-id={rev.id}
+                    rest-name={restName}
+                    style={{gridColumn: "1"}}
+                    onClick={(e) => {
+                      handleUpvote(e, 1);
+                    }}
+                  >
+                    Up {rev.upvoteStatus == 1 ? "✓" : ""}
+                  </button>
+                  <p style={{gridColumn: "2"}}> {rev.upvoteCount}</p>
+                  <button
+                    disabled={!authenticated}
+                    review-id={rev.id}
+                    rest-name={restName}
+                    style={{gridColumn: "3"}}
+                    onClick={(e) => {
+                      handleUpvote(e, -1);
+                    }}
+                  >
+                    Down {rev.upvoteStatus == -1 ? "✓" : ""}
+                  </button>
+                </ReviewUpvoteContainer>
+              </ReviewBottomContainer>
             </ReviewBase>
           ))}
         </HoldReviews>
@@ -280,22 +351,17 @@ const RestaurantDetail = () => {
     }
 
     return (
-      <ReviewContainer>
+      <ReviewContainer style={{gridColumn: 1}}>
         <ReviewTitleContainer>
           <ReviewsTopTitle>Reviews</ReviewsTopTitle>
-          <select
-            onChange={(event) => {
-              setSortOrder(event.target.value);
-            }}
-            name="sort"
-          >
+          <Select>
             <option value="upvotes-descending">Upvotes (High to Low)</option>
             <option value="upvotes-ascending">Upvotes (Low to High)</option>
             <option value="stars-descending">Stars (High to Low)</option>
             <option value="stars-ascending">Stars (Low to High)</option>
             <option value="time-descending">Time (Newest to Oldest)</option>
             <option value="time-ascending">Time (Oldest to Newest)</option>
-          </select>
+          </Select>
           <CreateReview to={`/${restName}/review`}>
             <Plus src="/CreateReviewPlus.png" />
             <h2
@@ -305,7 +371,7 @@ const RestaurantDetail = () => {
             </h2>
           </CreateReview>
         </ReviewTitleContainer>
-        {reviewContent}
+        {getReviewContent}
       </ReviewContainer>
     );
   };
@@ -347,37 +413,38 @@ const RestaurantDetail = () => {
 
   return (
     <DetailContainer>
-      {getRestaurantContent()}
-      {getReviewContent()}
+      {HandleRestaurant(restName)}
+      <div style={{display: "grid", gridTemplateColumns: "65%"}}>
+        {HandleReviews(restName)}
+        {HandleRestBlurb(restName)}
+      </div>
     </DetailContainer>
   );
+  };
 };
 
 const InfoContainer = styled.div`
   display: grid;
   grid-template-columns: 50% 50%;
-  margin: auto;
   margin-top: 5%;
   padding: 2%;
-  width: 100%;
-  max-width: 80vw;
-  max-height: 60vh;
-  background-color: #d9d9d9;
-  border-radius: 25px;
+  max-height: 40vh;
+  background-color: #D0DFEC;
+  box-shadow: 10px 0px 2px;
 `;
 
 const DetailContainer = styled.div`
-  height: 100vh;
+  height: fit-content;
   width: 100vw;
   background-color: #efeeee;
-  overflow-y: auto;
+  position: absolute;
 `;
 
 const RestaurantContainer = styled.div`
   max-height: inherit;
   max-width: 100vw;
   display: grid;
-  grid-template-rows: 15% 15% 10%;
+  grid-template-rows: 20% 15%;
   flex-direction: column;
   grid-column: 1;
 `;
@@ -417,7 +484,8 @@ const Star = styled.img`
 
 const RestaurantDescription = styled.div`
   font-size: 1rem;
-  grid-row: 4;
+  grid-row: 3;
+  padding-top: 3%;
 `;
 
 const RestaurantPhoto = styled.img`
@@ -430,11 +498,47 @@ const RestaurantPhoto = styled.img`
   margin-bottom: auto;
 `;
 
+const BlurbContainer = styled.div`
+  background-color: #3284bf;
+  color: #efeeee;
+  border-radius: 18px;
+  height: min-content;
+  grid-column: 2;
+  margin-left: 5%;
+  margin-top: 10%;
+  max-width: 20vw;
+  padding: 5%;
+  display: grid;
+`;
+
+const Tags = styled.div`
+  gridRow: 2;
+  display: grid;
+  flexDirection: column;
+  grid-template-columns: repeat(3,1fr);
+  row-gap: 10%;
+`;
+
+const BlurbTag = styled.div`
+  display: flex;
+  max-width: fit-content;
+  border-radius: 18px;
+  color: #FFD100;
+  border-color: #FFD100;
+  font-weight: bold;
+  justify-content: center;
+  padding: 5%;
+  border-style: solid;
+  justify-self: center;
+  border-width: 2px;
+`;
+
 const ReviewContainer = styled.div`
   display: grid;
+  grid-column: 2;
   width: 100%;
-  max-width: 80vw;
-  margin: auto;
+  max-width: 50vw;
+  margin-left: auto;
 `;
 
 const ReviewTitleContainer = styled.div`
@@ -443,7 +547,9 @@ const ReviewTitleContainer = styled.div`
   max-width: 80vw;
   margin: auto;
   grid-row: 1;
-  grid-template-columns: 75%;
+  padding-top: 2%;
+  padding-bottom: 5%;
+  grid-template-columns: 30% 20%;
 `;
 
 const ReviewsTopTitle = styled.h1`
@@ -451,6 +557,28 @@ const ReviewsTopTitle = styled.h1`
   font-size: 2.5rem;
   grid-column: 1;
   margin-bottom: 1%;
+`;
+
+const Select = styled.select`
+  width: 100%;
+  height: 35px;
+  background: white;
+  color: gray;
+  padding-left: 5px;
+  font-size: 14px;
+  border: none;
+  margin-top: auto;
+  margin-bottom: 1%;
+  grid-column: 2;
+
+  option {
+    color: black;
+    background: white;
+    display: flex;
+    white-space: pre;
+    min-height: 20px;
+    padding: 0px 2px 1px;
+  }
 `;
 
 const Plus = styled.img`
@@ -464,7 +592,7 @@ const CreateReview = styled(Link)`
   color: #efeeee;
   border-radius: 18px;
   height: min-content;
-  grid-column: 2;
+  grid-column: 3;
   margin-top: auto;
   margin-bottom: 1%;
   max-width: fit-content;
@@ -493,8 +621,18 @@ const ReviewBase = styled.div`
   padding: 2%;
   margin: 1%;
   display: grid;
-  grid-template-rows: auto-fit;
+  grid-template-rows: 40%;
   flex-direction: column;
+`;
+
+const ReviewNameContainer = styled.div`
+  display: grid;
+  width: 100%;
+  max-height: 20vh;
+  grid-row: 1;
+  padding-top: 2%;
+  padding-bottom: 5%;
+  grid-template-columns: 60%;
 `;
 
 const UserName = styled.h3`
@@ -511,9 +649,24 @@ const ReviewStars = styled.div`
   grid-column: 2;
 `;
 
-const ReviewContent = styled.div`
+const ReviewBottomContainer = styled.div`
   font-size: 1rem;
-  grid-row: 3;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: 80%
+`;
+
+const ReviewContentContainer = styled.div`
+  font-size: 1rem;
+  grid-column: 1;
+`;
+
+const ReviewUpvoteContainer = styled.div`
+  font-size: 1rem;
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: auto-fit;
+  margin-top: auto;
 `;
 
 export default RestaurantDetail;
