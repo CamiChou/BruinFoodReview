@@ -49,7 +49,6 @@ const RestaurantBox = (props) => {
               filter.includes(childKey)
             ) {
               // TOOD: check why undefined
-              console.log(Math.round(childData.stars))
               restaurantBuf.push({
                 key: childKey,
                 name: childData.name,
@@ -84,7 +83,6 @@ const RestaurantBox = (props) => {
   } else {
     restaurantTiles = restaurants.map((rest, id) => (
       <Link key={id} to={`/${rest.key}`}>
-        <a>
         <div className="Tile">
           <div className="parent">
             <img
@@ -104,7 +102,6 @@ const RestaurantBox = (props) => {
             </div>
           </div>
         </div>
-        </a>
       </Link>
     ));
   }

@@ -108,7 +108,7 @@ class Header extends React.Component {
           <SignIn onClick={this.handleLogin.bind(this)}>
             <h1>Log in/Sign Up</h1>
           </SignIn>
-          <p> {this.state.auth_error ? "Issue Logging In!" : ""}</p>
+          {this.state.auth_error ? <p>"Issue Logging In!"</p> : ""}
         </>
       );
     }
