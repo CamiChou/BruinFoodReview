@@ -147,15 +147,14 @@ function FilterBox(props) {
           onClick={(e) => {
             setActive(buttonElem.key);
             getFilteredResturants(e.target.name, props.setFilter);
-          }}
-        >
+          }}>
           {buttonElem.name}
         </ButtonToggle>
       );
     });
     buttonGrid.push(
       <div key={i} className={elem.key}>
-        <h3>{elem.name}</h3>
+        <h3 className="category">{elem.name}</h3>
         <div>{buttons}</div>
       </div>
     );
@@ -164,7 +163,7 @@ function FilterBox(props) {
   return (
     <div className="mainBG">
       <div className="filterBox">
-        <div className="filterTopBar">Filters</div>
+        <div className="filterTopBar">Search Filters</div>
         {buttonGrid}
       </div>
     </div>
@@ -173,12 +172,14 @@ function FilterBox(props) {
 
 const Button = styled.button`
   background-color: #efeeee;
-  padding: 5px 10px;
+  padding: 2% 6%;
   font-weight: bold;
-  border-radius: 5px;
+  font-size: 1.3vh;
+  border-radius: 25px;
   outline: 0;
   transition: ease background-color 250ms;
-  margin: 5px 5px;
+  box-shadow: 0 0px 6px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+  margin: 2% 2%;
   &:hover {
     background-color: #90a4ae;
   }
