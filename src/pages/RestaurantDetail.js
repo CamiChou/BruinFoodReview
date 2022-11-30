@@ -297,7 +297,12 @@ const RestaurantDetail = () => {
           {revData.map((rev, id) => (
             <ReviewBase key={id}>
               <ReviewNameContainer>
-                <UserName>{rev.name}</UserName>
+                <div style={{gridTemplateRows: "2", gridColumn: "1"}}>
+                  <UserName>{rev.name}</UserName>
+                  <p style={{gridRow: "2", marginTop: "0%", fontSize: ".8rem", color: "#4C4E52"}}>
+                    {(Date(rev.timestamp * 1000)).toLocaleString()}
+                  </p>
+                </div>
                 <ReviewStars>{renderStars(rev.stars)}</ReviewStars>
               </ReviewNameContainer>
                 <ReviewBottomContainer>
@@ -639,7 +644,6 @@ const UserName = styled.h3`
 `;
 
 const ReviewStars = styled.div`
-  margin-top: auto;
   margin-bottom: auto;
   grid-row: 1;
   grid-column: 2;
@@ -655,6 +659,7 @@ const ReviewBottomContainer = styled.div`
 const ReviewContentContainer = styled.div`
   font-size: 1rem;
   grid-column: 1;
+  margin-top: 2%;
 `;
 
 const ReviewUpvoteContainer = styled.div`
