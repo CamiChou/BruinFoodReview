@@ -299,6 +299,16 @@ const RestaurantDetail = () => {
     );
   };
 
+  const formatTimestamp = (timestamp) => {
+    var date = new Date(timestamp);
+    var dateStr = `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`;
+    var hours = date.getHours();
+    var ampm = hours < 12 ? "AM" : "PM";
+    hours %= 12;
+    var timeStr = `${hours}:${date.getMinutes()} ${ampm}`;
+    return `${dateStr} ${timeStr}`;
+  };
+
   const getReviewContent = () => {
     let reviewContent;
     if (isReviewLoading) {
@@ -325,7 +335,7 @@ const RestaurantDetail = () => {
                       color: "#4C4E52",
                     }}
                   >
-                    {Date(rev.timestamp * 1000).toLocaleString()}
+                    {formatTimestamp(rev.timestamp)}
                   </p>
                 </div>
                 <ReviewStars>{renderStars(rev.stars)}</ReviewStars>
