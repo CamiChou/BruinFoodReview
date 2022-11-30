@@ -1,7 +1,7 @@
 //hooks
 import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { db } from "../firebase";
 import { ref, get, child, query, set, update } from "firebase/database";
@@ -17,6 +17,7 @@ const RestaurantDetail = () => {
   const params = useParams();
   const restName = params.name;
   const auth = getAuth();
+  const navigate = useNavigate();
   const [authenticated, setAuthenticated] = useState(false);
 
   const [forceFetchRestaurant, setForceFetchRestaurant] = useState(true);
@@ -444,6 +445,7 @@ const RestaurantDetail = () => {
 
   return (
     <DetailContainer>
+      <BackButton onClick={() => navigate(`/`)}>⟵ Go Back</BackButton>
       {getRestaurantContent()}
       <div style={{ display: "grid", gridTemplateColumns: "65%" }}>
         {getReviewContent()}
@@ -456,7 +458,7 @@ const RestaurantDetail = () => {
 const InfoContainer = styled.div`
   display: grid;
   grid-template-columns: 55%;
-  margin-top: 5%;
+  margin-top: 2%;
   padding: 2%;
   max-height: 40vh;
   background-color: #d0dfec;
@@ -486,6 +488,23 @@ const RestaurantTitle = styled.h1`
   grid-row: 1;
   margin: 0%;
 `;
+
+const BackButton = styled.div`
+  background-color: #3284bf;
+  color: #efeeee;
+  cursor: pointer;
+  border-radius: 25px;
+  height: min-content;
+  width: 8%;
+  position: relative;
+  font-weight: bold;
+  margin-top: 2%;  
+  margin-left: 3%;
+  padding-right: 2%;
+  padding-left: 2%;
+  padding-top: 1%;
+  padding-bottom: 1%;
+`
 
 const RestaurantLocation = styled.div`
   color: #efeeee;
