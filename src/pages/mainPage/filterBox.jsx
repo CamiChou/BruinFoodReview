@@ -56,12 +56,11 @@ async function getFilteredResturants(name, setFilter) {
 function FilterBox(props) {
   const filter_buttons = [
     {
-      key: "general",
-      name: "Reset",
+      key: "reset",
       buttons: [
         {
           key: "all",
-          name: "All Restaurants",
+          name: "Reset",
         },
       ],
     },
