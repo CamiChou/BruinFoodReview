@@ -256,14 +256,14 @@ const RestaurantDetail = () => {
       holdTags = tags.split(",")
     }
     let blurbLocation = (
-      <div>
+      <div style = {{marginBottom: "2%"}}>
         <h3 style={{marginTop: "0%", marginBottom: "5%", fontSize: "x-large"}}>Location</h3>
-        <p style={{fontWeight: "bold", color: "#FFD100", fontSize: "larger"}}>{location}</p>
+        <p style={{fontWeight: "bold", color: "#FFD100", fontSize: "larger", margin: "0%"}}>{location}</p>
       </div>
     );
     let blurbTags = (
       <div style = {{display: "grid"}}>
-        <h3 style = {{gridRow: "1", marginBottom: "5%", fontSize: "x-large"}}>Tags</h3>
+        <h3 style = {{gridRow: "1", marginTop: "2%", marginBottom: "5%", fontSize: "x-large"}}>Tags</h3>
         <Tags>
             {
               holdTags.map((id,tag) => (
@@ -312,9 +312,13 @@ const RestaurantDetail = () => {
                       handleUpvote(e, 1);
                     }}
                   >
-                    Up {rev.upvoteStatus == 1 ? "✓" : ""}
+                  Up {rev.upvoteStatus == 1 ? "✓" : ""}
+                    {/*<img
+              src={rev.upvoteStatus == 1 ? "/UpvoteFill.png" : "/UpvoteEmpty.png"}
+              style={{ width: 45, height: 45 }}
+                  ></img>*/}
                   </button>
-                  <p style={{gridColumn: "2"}}> {rev.upvoteCount}</p>
+                  <p style={{justifySelf: "center", gridColumn: "2"}}> {rev.upvoteCount}</p>
                   <button
                     disabled={!authenticated}
                     review-id={rev.id}
@@ -325,6 +329,7 @@ const RestaurantDetail = () => {
                     }}
                   >
                     Down {rev.upvoteStatus == -1 ? "✓" : ""}
+                    {console.log(rev.upvoteStatus)}
                   </button>
                 </ReviewUpvoteContainer>
               </ReviewBottomContainer>
@@ -337,7 +342,7 @@ const RestaurantDetail = () => {
     return (
       <ReviewContainer style={{gridColumn: 1}}>
         <ReviewTitleContainer>
-          <ReviewsTopTitle>Reviews</ReviewsTopTitle>
+        <ReviewsTopTitle>Reviews</ReviewsTopTitle>
           <Select
             onChange={(event) => {
               setSortOrder(event.target.value);
@@ -354,7 +359,7 @@ const RestaurantDetail = () => {
           <CreateReview to={`/${restName}/review`}>
             <Plus src="/CreateReviewPlus.png" />
             <h2
-              style={{ marginTop: "5%", marginBottom: "5%", gridColumn: "2" }}
+              style={{ fontSize: "1.3rem", marginTop: "5%", marginBottom: "5%", gridColumn: "2" }}
             >
               Create Review
             </h2>
@@ -402,8 +407,8 @@ const RestaurantDetail = () => {
 
   return (
     <DetailContainer>
-      <div style={{display: "grid", gridTemplateColumns: "65%"}}>
       {getRestaurantContent()}
+      <div style={{display: "grid", gridTemplateColumns: "65%"}}>
       {getReviewContent()}
         {HandleRestBlurb(restName)}
       </div>
@@ -497,6 +502,7 @@ const BlurbContainer = styled.div`
   max-width: 20vw;
   padding: 5%;
   display: grid;
+  box-shadow: 2px 2px 3px #6F7378;
 `;
 
 const Tags = styled.div`
@@ -517,8 +523,9 @@ const BlurbTag = styled.div`
   justify-content: center;
   padding: 5%;
   border-style: solid;
-  justify-self: center;
+  justify-self: flex-start;
   border-width: 2px;
+  font-size: small;
 `;
 
 const ReviewContainer = styled.div`
@@ -535,16 +542,16 @@ const ReviewTitleContainer = styled.div`
   max-width: 80vw;
   margin: auto;
   grid-row: 1;
+  padding-bottom: 1.5%;
   padding-top: 2%;
-  padding-bottom: 5%;
-  grid-template-columns: 30% 20%;
+  grid-template-columns: 50% 50%
 `;
 
 const ReviewsTopTitle = styled.h1`
   padding-top: 2%;
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   grid-column: 1;
-  margin-bottom: 1%;
+  margin-bottom: 3%;
 `;
 
 const Select = styled.select`
@@ -558,6 +565,7 @@ const Select = styled.select`
   margin-top: auto;
   margin-bottom: 1%;
   grid-column: 2;
+  grid-row: 2;
 
   option {
     color: black;
@@ -580,11 +588,10 @@ const CreateReview = styled(Link)`
   color: #efeeee;
   border-radius: 18px;
   height: min-content;
-  grid-column: 3;
+  grid-column: 1;
   margin-top: auto;
   margin-bottom: 1%;
   max-width: fit-content;
-  justify-self: flex-end;
   padding-right: 4%;
   padding-left: 2%;
   text-decoration: none;
@@ -606,11 +613,12 @@ const ReviewBase = styled.div`
   display: flex;
   background-color: #d9d9d9;
   border-radius: 25px;
-  padding: 2%;
+  padding: 3%;
   margin: 1%;
   display: grid;
   grid-template-rows: 40%;
   flex-direction: column;
+  box-shadow: -2px 2px 3px #ABB0B8;
 `;
 
 const ReviewNameContainer = styled.div`
@@ -620,7 +628,7 @@ const ReviewNameContainer = styled.div`
   grid-row: 1;
   padding-top: 2%;
   padding-bottom: 5%;
-  grid-template-columns: 60%;
+  grid-template-columns: 65%;
 `;
 
 const UserName = styled.h3`
