@@ -87,7 +87,7 @@ function FilterBox(props) {
 
     {
       key: "serviceType",
-      name: "Servive Type",
+      name: "Service Type",
       buttons: [
         {
           key: "takeout",
