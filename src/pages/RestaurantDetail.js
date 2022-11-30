@@ -196,7 +196,6 @@ const RestaurantDetail = () => {
         <RestaurantStars>
           {renderStars(Math.round(averageStars))}
         </RestaurantStars>
-        <RestaurantLocation>{location}</RestaurantLocation>
         <RestaurantDescription>{description}</RestaurantDescription>
       </RestaurantContainer>
     );
@@ -207,6 +206,50 @@ const RestaurantDetail = () => {
       </InfoContainer>
     );
   };
+
+  const HandleRestBlurb = () => {
+    const [restaurantData, setRestaurantData] = useState({});
+    const [isLoading, setLoading] = useState(true);
+
+    useEffect(() => {
+      async function fetchData() {
+        if (forceFetchRestaurant) {
+          const newAverageStars = await getStarData(params.name);
+          const newRestaurantData = await getRestaurantData(params.name);
+          setAverageStars(newAverageStars);
+          setRestaurantData(newRestaurantData);
+          setForceFetchRestaurant(false);
+        }
+        setLoading(false);
+      }
+      fetchData();
+    }, [averageStars, forceFetchRestaurant]);
+
+    let name = "Loading Name...";
+    let location = "Loading Location...";
+    let description = "Loading Description...";
+    if (!isLoading) {
+      name = restaurantData.name;
+      location = restaurantData.loc;
+      description = restaurantData.desc;
+    }
+    let restaurantContent = (
+      <RestaurantContainer>
+        <RestaurantTitle>{name}</RestaurantTitle>
+        <RestaurantStars>
+          {renderStars(Math.round(averageStars))}
+        </RestaurantStars>
+        <RestaurantDescription>{description}</RestaurantDescription>
+      </RestaurantContainer>
+    );
+    return (
+      <InfoContainer>
+        {restaurantContent}
+        <RestaurantPhoto src={`/rest-photos/${restName}.jpeg`} />
+      </InfoContainer>
+    );
+  };
+
   const HandleReviews = () => {
     const [revData, setRevData] = useState([]);
     const [isLoading, setLoading] = useState(true);
@@ -238,10 +281,10 @@ const RestaurantDetail = () => {
         <HoldReviews>
           {revData.map((rev, id) => (
             <ReviewBase key={id}>
-              <ReviewTitleContainer>
+              <ReviewNameContainer>
                 <UserName>{rev.name}</UserName>
                 <ReviewStars>{renderStars(rev.stars)}</ReviewStars>
-              </ReviewTitleContainer>
+              </ReviewNameContainer>
               <ReviewContent>{rev.content}</ReviewContent>
               <p> {rev.upvoteCount}</p>
               <button
@@ -270,17 +313,17 @@ const RestaurantDetail = () => {
       );
     }
     return (
-      <ReviewContainer>
+      <ReviewContainer style={{gridColumn: 1}}>
         <ReviewTitleContainer>
           <ReviewsTopTitle>Reviews</ReviewsTopTitle>
-          <select name="sort">
+          <Select>
             <option value="upvotes-descending">Upvotes (High to Low)</option>
             <option value="upvotes-ascending">Upvotes (Low to High)</option>
             <option value="stars-descending">Stars (High to Low)</option>
             <option value="stars-ascending">Stars (Low to High)</option>
             <option value="time-descending">Time (Newest to Oldest)</option>
             <option value="time-ascending">Time (Oldest to Newest)</option>
-          </select>
+          </Select>
           <CreateReview to={`/${restName}/review`}>
             <Plus src="/CreateReviewPlus.png" />
             <h2
@@ -298,7 +341,9 @@ const RestaurantDetail = () => {
   return (
     <DetailContainer>
       {HandleRestaurant(restName)}
-      {HandleReviews(restName)}
+      <div style={{display: "grid", gridTemplateColumns: "65%"}}>
+        {HandleReviews(restName)}
+      </div>
     </DetailContainer>
   );
 };
@@ -306,28 +351,25 @@ const RestaurantDetail = () => {
 const InfoContainer = styled.div`
   display: grid;
   grid-template-columns: 50% 50%;
-  margin: auto;
   margin-top: 5%;
   padding: 2%;
-  width: 100%;
-  max-width: 80vw;
-  max-height: 60vh;
-  background-color: #d9d9d9;
-  border-radius: 25px;
+  max-height: 40vh;
+  background-color: #D0DFEC;
+  box-shadow: 10px 0px 2px;
 `;
 
 const DetailContainer = styled.div`
-  height: 100vh;
+  height: fit-content;
   width: 100vw;
   background-color: #efeeee;
-  overflow-y: auto;
+  position: absolute;
 `;
 
 const RestaurantContainer = styled.div`
   max-height: inherit;
   max-width: 100vw;
   display: grid;
-  grid-template-rows: 15% 15% 10%;
+  grid-template-rows: 20% 15%;
   flex-direction: column;
   grid-column: 1;
 `;
@@ -367,7 +409,8 @@ const Star = styled.img`
 
 const RestaurantDescription = styled.div`
   font-size: 1rem;
-  grid-row: 4;
+  grid-row: 3;
+  padding-top: 3%;
 `;
 
 const RestaurantPhoto = styled.img`
@@ -382,9 +425,10 @@ const RestaurantPhoto = styled.img`
 
 const ReviewContainer = styled.div`
   display: grid;
+  grid-column: 2;
   width: 100%;
-  max-width: 80vw;
-  margin: auto;
+  max-width: 50vw;
+  margin-left: auto;
 `;
 
 const ReviewTitleContainer = styled.div`
@@ -393,7 +437,9 @@ const ReviewTitleContainer = styled.div`
   max-width: 80vw;
   margin: auto;
   grid-row: 1;
-  grid-template-columns: 75%;
+  padding-top: 2%;
+  padding-bottom: 5%;
+  grid-template-columns: 30% 20%;
 `;
 
 const ReviewsTopTitle = styled.h1`
@@ -401,6 +447,28 @@ const ReviewsTopTitle = styled.h1`
   font-size: 2.5rem;
   grid-column: 1;
   margin-bottom: 1%;
+`;
+
+const Select = styled.select`
+  width: 100%;
+  height: 35px;
+  background: white;
+  color: gray;
+  padding-left: 5px;
+  font-size: 14px;
+  border: none;
+  margin-top: auto;
+  margin-bottom: 1%;
+  grid-column: 2;
+
+  option {
+    color: black;
+    background: white;
+    display: flex;
+    white-space: pre;
+    min-height: 20px;
+    padding: 0px 2px 1px;
+  }
 `;
 
 const Plus = styled.img`
@@ -414,7 +482,7 @@ const CreateReview = styled(Link)`
   color: #efeeee;
   border-radius: 18px;
   height: min-content;
-  grid-column: 2;
+  grid-column: 3;
   margin-top: auto;
   margin-bottom: 1%;
   max-width: fit-content;
@@ -445,6 +513,16 @@ const ReviewBase = styled.div`
   display: grid;
   grid-template-rows: auto-fit;
   flex-direction: column;
+`;
+
+const ReviewNameContainer = styled.div`
+  display: grid;
+  width: 100%;
+  max-height: 20vh;
+  grid-row: 1;
+  padding-top: 2%;
+  padding-bottom: 5%;
+  grid-template-columns: 60%;
 `;
 
 const UserName = styled.h3`
