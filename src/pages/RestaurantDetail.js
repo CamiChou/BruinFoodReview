@@ -229,7 +229,6 @@ const RestaurantDetail = () => {
     );
   };
 
-
   const HandleRestBlurb = () => {
     const [restaurantData, setRestaurantData] = useState({});
     const [isLoading, setLoading] = useState(true);
@@ -316,10 +315,17 @@ const RestaurantDetail = () => {
           {revData.map((rev, id) => (
             <ReviewBase key={id}>
               <ReviewNameContainer>
-                <div style={{gridTemplateRows: "2", gridColumn: "1"}}>
+                <div style={{ gridTemplateRows: "2", gridColumn: "1" }}>
                   <UserName>{rev.name}</UserName>
-                  <p style={{gridRow: "2", marginTop: "0%", fontSize: ".8rem", color: "#4C4E52"}}>
-                    {(Date(rev.timestamp * 1000)).toLocaleString()}
+                  <p
+                    style={{
+                      gridRow: "2",
+                      marginTop: "0%",
+                      fontSize: ".8rem",
+                      color: "#4C4E52",
+                    }}
+                  >
+                    {Date(rev.timestamp * 1000).toLocaleString()}
                   </p>
                 </div>
                 <ReviewStars>{renderStars(rev.stars)}</ReviewStars>
@@ -327,35 +333,47 @@ const RestaurantDetail = () => {
               <ReviewBottomContainer>
                 <ReviewContentContainer>{rev.content}</ReviewContentContainer>
                 <ReviewUpvoteContainer>
-                  <button
-                    disabled={!authenticated}
-                    review-id={rev.id}
-                    rest-name={restName}
-                    style={{ gridColumn: "1" }}
-                    onClick={(e) => {
-                      handleUpvote(e, 1);
-                    }}
-                  >
-                    Up {rev.upvoteStatus == 1 ? "✓" : ""}
-                    {/*<img
-              src={rev.upvoteStatus == 1 ? "/UpvoteFill.png" : "/UpvoteEmpty.png"}
-              style={{ width: 45, height: 45 }}
-                  ></img>*/}
+                  <button>
+                    <img
+                      review-id={rev.id}
+                      rest-name={restName}
+                      onClick={(e) => {
+                        if (authenticated) {
+                          handleUpvote(e, 1);
+                        }
+                      }}
+                      src={
+                        !authenticated
+                          ? "/UpvoteGrey.png"
+                          : rev.upvoteStatus == 1
+                          ? "/UpvoteFill.png"
+                          : "/UpvoteEmpty.png"
+                      }
+                      style={{ gridColumn: "1", width: 45, height: 45 }}
+                    ></img>
                   </button>
                   <p style={{ justifySelf: "center", gridColumn: "2" }}>
                     {" "}
                     {rev.upvoteCount}
                   </p>
-                  <button
-                    disabled={!authenticated}
-                    review-id={rev.id}
-                    rest-name={restName}
-                    style={{ gridColumn: "3" }}
-                    onClick={(e) => {
-                      handleUpvote(e, -1);
-                    }}
-                  >
-                    Down {rev.upvoteStatus == -1 ? "✓" : ""}
+                  <button>
+                    <img
+                      review-id={rev.id}
+                      rest-name={restName}
+                      onClick={(e) => {
+                        if (authenticated) {
+                          handleUpvote(e, -1);
+                        }
+                      }}
+                      src={
+                        !authenticated
+                          ? "/DownvoteGrey.png"
+                          : rev.upvoteStatus == -1
+                          ? "/DownvoteFill.png"
+                          : "/DownvoteEmpty.png"
+                      }
+                      style={{ gridColumn: "1", width: 45, height: 45 }}
+                    ></img>
                   </button>
                 </ReviewUpvoteContainer>
               </ReviewBottomContainer>
