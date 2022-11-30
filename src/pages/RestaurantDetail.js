@@ -8,7 +8,7 @@ import { ref, get, child, query, set, update } from "firebase/database";
 import StarRating from "./createReviewPage/StarRating.js";
 import { useParams } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
-import { fetchSignInMethodsForEmail, getAuth } from "firebase/auth";
+import { onAuthStateChanged, getAuth } from "firebase/auth";
 import { FieldValue } from "firebase/firestore";
 import { ResultList } from "@appbaseio/reactivesearch";
 
@@ -20,6 +20,11 @@ const RestaurantDetail = () => {
   const [forceFetchRestaurant, setForceFetchRestaurant] = useState(true);
   const [forceFetchReviews, setForceFetchReviews] = useState(true);
   const [averageStars, setAverageStars] = useState(5);
+  const [authenticated, setAuthenticated] = useState(false);
+
+  onAuthStateChanged(auth, (user) => {
+    setAuthenticated(user != null);
+  });
 
   const renderStars = (numStars) => {
     if (numStars === undefined) {
@@ -101,7 +106,7 @@ const RestaurantDetail = () => {
     const user = auth.currentUser;
 
     var userUpvotes = {};
-    if (user != null) {
+    if (authenticated) {
       let upvotePath = `users/${user.uid}/reviews/${restName}`;
       userUpvotes = await get(child(dbRef, upvotePath)).then((snapshot) => {
         if (snapshot.exists()) {
@@ -188,7 +193,9 @@ const RestaurantDetail = () => {
     let restaurantContent = (
       <RestaurantContainer>
         <RestaurantTitle>{name}</RestaurantTitle>
-        <RestaurantStars>{renderStars(Math.round(averageStars))}</RestaurantStars>
+        <RestaurantStars>
+          {renderStars(Math.round(averageStars))}
+        </RestaurantStars>
         <RestaurantLocation>{location}</RestaurantLocation>
         <RestaurantDescription>{description}</RestaurantDescription>
       </RestaurantContainer>
@@ -204,7 +211,6 @@ const RestaurantDetail = () => {
     const [revData, setRevData] = useState([]);
     const [isLoading, setLoading] = useState(true);
     const user = auth.currentUser;
-    const authenticated = user != null;
 
     useEffect(() => {
       async function fetchData() {

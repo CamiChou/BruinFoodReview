@@ -4,18 +4,23 @@ import { useNavigate } from "react-router-dom";
 import StarRating from "./StarRating";
 import { getDatabase, ref, get, child, set, update } from "firebase/database";
 import { useParams } from "react-router-dom";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const dbRef = ref(getDatabase());
+onAuthStateChanged;
 
 const CreateReview = ({ pageName }) => {
   const [reviewContent, setReviewContent] = useState("");
   const [stars, setStars] = useState(0);
+  const [authenticated, setAuthenticated] = useState(false);
   const params = useParams();
   const restName = params.name;
   const auth = getAuth();
-
   const navigate = useNavigate();
+
+  onAuthStateChanged(auth, (user) => {
+    setAuthenticated(user != null);
+  });
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -56,7 +61,7 @@ const CreateReview = ({ pageName }) => {
 
   let submit_button;
 
-  if (auth.currentUser != null) {
+  if (authenticated) {
     let reviewComplete = reviewContent.length === 0 || stars < 1;
     submit_button = (
       <div className="submitBtn">
