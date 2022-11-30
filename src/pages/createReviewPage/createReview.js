@@ -109,6 +109,9 @@ const CreateReview = ({ pageName }) => {
   return (
     <div id={pageName}>
       <div className="BiggestBox">
+        <div className="Back">
+          <button className="BackButton" onClick={() => navigate(`/${restName}`)}>⟵ Go Back</button>
+        </div>
         <div className="ReviewContainer">
           <div className="ReviewTitleContainer">
             {isLoadingName ? "Loading Name..." : restaurantName}

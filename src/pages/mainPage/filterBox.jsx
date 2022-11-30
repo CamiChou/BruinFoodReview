@@ -1,50 +1,24 @@
-import React, { useEffect, useState } from "react";
-import styles from "./filterBox.css";
+import { child, get, ref } from "firebase/database";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { db } from "../../firebase.js";
-import { ref, get, child } from "firebase/database";
-
-
-const Button = styled.button`
-  background-color: #EFEEEE;
-  padding: 5px 10px;
-  font-weight: bold;
-  border-radius: 5px;
-  outline: 0;
-  transition: ease background-color 250ms;
-  margin: 5px 5px;
-  &:hover {
-    background-color: #90a4ae;
-  }
-`;
-
-const ButtonToggle = styled(Button)`
-  background-color: #EFEEEE;
-  ${({ active }) =>
-    active &&
-    `
-    color: #EFEEEE;
-    background-color: #3284bf;
-    &:hover {
-      background-color: #3284bf;
-  `}
-`;
+import "./filterBox.css";
 
 const dbRef = ref(db);
 
 async function getFilteredResturants(name, setFilter) {
   let filters = await get(child(dbRef, `filters/${name}`))
     .then((snapshot) => {
-      let filter_buf = [];
+      let filterBuf = [];
       if (snapshot.exists()) {
         snapshot.forEach((childSnapshot) => {
           const childKey = childSnapshot.key;
-          filter_buf.push(childKey);
+          filterBuf.push(childKey);
         });
       } else {
         console.error(`Error getting filter: ${name}`);
       }
-      return filter_buf;
+      return filterBuf;
     })
     .catch((error) => {
       console.error(error.message);
@@ -53,7 +27,7 @@ async function getFilteredResturants(name, setFilter) {
 }
 
 function FilterBox(props) {
-  const filter_buttons = [
+  const filterButtons = [
     {
       key: "reset",
       buttons: [
@@ -161,26 +135,25 @@ function FilterBox(props) {
     },
   ];
 
-  let button_grid = [];
-  // console.log(filter_buttons[0].buttons[0]['key']);
-  const [active, setActive] = useState(filter_buttons[0].buttons[0]['key']);
-  filter_buttons.forEach((elem, i) => {
-    let buttons = elem.buttons.map((button_elem, i) => {
+  let buttonGrid = [];
+  const [active, setActive] = useState(filterButtons[0].buttons[0]["key"]);
+  filterButtons.forEach((elem, i) => {
+    let buttons = elem.buttons.map((buttonElem, i) => {
       return (
         <ButtonToggle
-          active = {active===button_elem.key}
+          active={active === buttonElem.key}
           key={i}
-          name={button_elem.key}
+          name={buttonElem.key}
           onClick={(e) => {
-            setActive(button_elem.key);
+            setActive(buttonElem.key);
             getFilteredResturants(e.target.name, props.setFilter);
           }}
         >
-          {button_elem.name}
+          {buttonElem.name}
         </ButtonToggle>
       );
     });
-    button_grid.push(
+    buttonGrid.push(
       <div key={i} className={elem.key}>
         <h3>{elem.name}</h3>
         <div>{buttons}</div>
@@ -191,13 +164,36 @@ function FilterBox(props) {
   return (
     <div className="mainBG">
       <div className="filterBox">
-        <div className="filterTopBar"> 
-           Filters
-        </div>
-        {button_grid}
+        <div className="filterTopBar">Filters</div>
+        {buttonGrid}
       </div>
     </div>
   );
 }
+
+const Button = styled.button`
+  background-color: #efeeee;
+  padding: 5px 10px;
+  font-weight: bold;
+  border-radius: 5px;
+  outline: 0;
+  transition: ease background-color 250ms;
+  margin: 5px 5px;
+  &:hover {
+    background-color: #90a4ae;
+  }
+`;
+
+const ButtonToggle = styled(Button)`
+  background-color: #efeeee;
+  ${({ active }) =>
+    active &&
+    `
+    color: #EFEEEE;
+    background-color: #3284bf;
+    &:hover {
+      background-color: #3284bf;
+  `}
+`;
 
 export default FilterBox;

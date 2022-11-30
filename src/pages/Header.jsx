@@ -1,29 +1,20 @@
 import React from "react";
-import styled from "styled-components";
 import { NavLink } from "react-router-dom";
-import { db } from "../firebase";
-import { ref, set, child } from "firebase/database";
+import styled from "styled-components";
 
 import {
   getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
   GoogleAuthProvider,
+  onAuthStateChanged,
   signInWithPopup,
 } from "firebase/auth";
-import { getValueArrayWithinLimits } from "@appbaseio/reactivesearch/lib/utils";
-
-const dbRef = ref(db);
 
 class Header extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: null,
-      password: 10,
       authenticated: false,
-      auth_error: false,
+      authError: false,
       user: null,
     };
 
@@ -48,43 +39,25 @@ class Header extends React.Component {
   handleLogin(event) {
     this.setState((prevState) => ({
       ...prevState,
-      auth_error: false,
+      authError: false,
     }));
-    signInWithPopup(this.auth, this.provider)
-      .then((result) => {
-        const user = result.user;
-      })
-      .catch((error) => {
-        console.error(error.message);
-        this.setState((prevState) => ({
-          ...prevState,
-          auth_error: true,
-        }));
-      });
+    signInWithPopup(this.auth, this.provider).catch((error) => {
+      console.error(error.message);
+      this.setState((prevState) => ({
+        ...prevState,
+        authError: true,
+      }));
+    });
   }
 
-  handleLogout(event) {
+  handleLogout() {
     this.auth.signOut();
   }
 
   render() {
-    const resturants = [
-      {
-        path: "/deneve",
-        label: "De Neve",
-      },
-      {
-        path: "/epic",
-        label: "Epicuria",
-      },
-      {
-        path: "/bplate",
-        label: "Bruin Plate",
-      },
-    ];
-    let auth_input;
+    let authInput;
     if (this.state.authenticated) {
-      auth_input = (
+      authInput = (
         <>
           <LoggedIn>
             <h2
@@ -103,12 +76,12 @@ class Header extends React.Component {
         </>
       );
     } else {
-      auth_input = (
+      authInput = (
         <>
           <SignIn onClick={this.handleLogin.bind(this)}>
             <h1>Log in/Sign Up</h1>
           </SignIn>
-          {this.state.auth_error ? <p>"Issue Logging In!"</p> : ""}
+          {this.state.authError ? <p>"Issue Logging In!"</p> : ""}
         </>
       );
     }
@@ -131,24 +104,8 @@ class Header extends React.Component {
                     }}
                   />
                 </NavLink>
-                <HoldButton>{auth_input}</HoldButton>
+                <HoldButton>{authInput}</HoldButton>
               </HoldHeader>
-              {/*
-              <ul className="navbar-nav ml-auto">
-                {resturants.map((resturant, id) => (
-                  <li key={id} className="nav-item">
-                    <NavLink className="nav-link" to={resturant.path}>
-                      {resturant.label}
-                    </NavLink>
-                  </li>
-                ))}
-
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/main-page">
-                    Resturants
-                  </NavLink>
-                </li>
-              </ul> */}
             </div>
           </div>
         </nav>

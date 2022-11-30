@@ -1,11 +1,11 @@
 //hooks
 import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { db } from "../firebase";
 import { ref, get, child, query, set, update } from "firebase/database";
-import StarRating from "./createReviewPage/StarRating.js";
+import { renderStars} from "./createReviewPage/StarRating.js";
 import { useParams } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
@@ -17,6 +17,7 @@ const RestaurantDetail = () => {
   const params = useParams();
   const restName = params.name;
   const auth = getAuth();
+  const navigate = useNavigate();
   const [authenticated, setAuthenticated] = useState(false);
 
   const [forceFetchRestaurant, setForceFetchRestaurant] = useState(true);
@@ -36,28 +37,6 @@ const RestaurantDetail = () => {
       setAuthenticated(user != null);
     });
   }, []);
-
-  const renderStars = (numStars) => {
-    if (numStars === undefined) {
-      numStars = 0; // TODO check why undefined
-    }
-    let off = Array(5 - numStars)
-      .fill(null)
-      .map((elem, id) => {
-        return <Star key={id} src={"/Star1.png"}></Star>;
-      });
-    let on = Array(numStars)
-      .fill(null)
-      .map((elem, id) => {
-        return <Star key={5 + id} src={"/Star2.png"}></Star>;
-      });
-    return (
-      <div>
-        {on}
-        {off}
-      </div>
-    );
-  };
 
   const handleUpvote = async (event, increment) => {
     const user = auth.currentUser;
@@ -167,7 +146,7 @@ const RestaurantDetail = () => {
           name: resObject.name,
           desc: resObject.desc,
           loc: resObject.location,
-          tags: resObject.tags
+          tags: resObject.tags,
         };
       } else {
         console.error(`${resPath} does not exist`);
@@ -200,7 +179,6 @@ const RestaurantDetail = () => {
         sortedReviews.sort((a, b) => a.timestamp - b.timestamp);
         break;
     }
-    console.log(`Length of Sorted Reviews: ${sortedReviews.length}`);
     return sortedReviews;
   };
 
@@ -230,7 +208,6 @@ const RestaurantDetail = () => {
     );
   };
 
-  
   const HandleRestBlurb = () => {
     const [restaurantData, setRestaurantData] = useState({});
     const [isLoading, setLoading] = useState(true);
@@ -253,22 +230,43 @@ const RestaurantDetail = () => {
     if (!isLoading) {
       location = restaurantData.loc;
       tags = restaurantData.tags;
-      holdTags = tags.split(",")
+      holdTags = tags.split(",");
     }
     let blurbLocation = (
-      <div style = {{marginBottom: "2%"}}>
-        <h3 style={{marginTop: "0%", marginBottom: "5%", fontSize: "x-large"}}>Location</h3>
-        <p style={{fontWeight: "bold", color: "#FFD100", fontSize: "larger", margin: "0%"}}>{location}</p>
+      <div style={{ marginBottom: "2%" }}>
+        <h3
+          style={{ marginTop: "0%", marginBottom: "5%", fontSize: "x-large" }}
+        >
+          Location
+        </h3>
+        <p
+          style={{
+            fontWeight: "bold",
+            color: "#FFD100",
+            fontSize: "larger",
+            margin: "0%",
+          }}
+        >
+          {location}
+        </p>
       </div>
     );
     let blurbTags = (
-      <div style = {{display: "grid"}}>
-        <h3 style = {{gridRow: "1", marginTop: "2%", marginBottom: "5%", fontSize: "x-large"}}>Tags</h3>
+      <div style={{ display: "grid" }}>
+        <h3
+          style={{
+            gridRow: "1",
+            marginTop: "2%",
+            marginBottom: "5%",
+            fontSize: "x-large",
+          }}
+        >
+          Tags
+        </h3>
         <Tags>
-            {
-              holdTags.map((id,tag) => (
-                <BlurbTag  key={id}>{id}</BlurbTag>
-              ))}
+          {holdTags.map((id, tag) => (
+            <BlurbTag key={id}>{id}</BlurbTag>
+          ))}
         </Tags>
       </div>
     );
@@ -279,7 +277,16 @@ const RestaurantDetail = () => {
       </BlurbContainer>
     );
   };
-  
+
+  const formatTimestamp = (timestamp) => {
+    var date = new Date(timestamp);
+    var dateStr = `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`;
+    var hours = date.getHours();
+    var ampm = hours < 12 ? "AM" : "PM";
+    hours %= 12;
+    var timeStr = `${hours}:${date.getMinutes()} ${ampm}`;
+    return `${dateStr} ${timeStr}`;
+  };
 
   const getReviewContent = () => {
     let reviewContent;
@@ -297,39 +304,65 @@ const RestaurantDetail = () => {
           {revData.map((rev, id) => (
             <ReviewBase key={id}>
               <ReviewNameContainer>
-                <UserName>{rev.name}</UserName>
+                <div style={{ gridTemplateRows: "2", gridColumn: "1" }}>
+                  <UserName>{rev.name}</UserName>
+                  <p
+                    style={{
+                      gridRow: "2",
+                      marginTop: "0%",
+                      fontSize: ".8rem",
+                      color: "#4C4E52",
+                    }}
+                  >
+                    {formatTimestamp(rev.timestamp)}
+                  </p>
+                </div>
                 <ReviewStars>{renderStars(rev.stars)}</ReviewStars>
               </ReviewNameContainer>
-                <ReviewBottomContainer>
+              <ReviewBottomContainer>
                 <ReviewContentContainer>{rev.content}</ReviewContentContainer>
                 <ReviewUpvoteContainer>
-                  <button
-                    disabled={!authenticated}
-                    review-id={rev.id}
-                    rest-name={restName}
-                    style={{gridColumn: "1"}}
-                    onClick={(e) => {
-                      handleUpvote(e, 1);
-                    }}
-                  >
-                  Up {rev.upvoteStatus == 1 ? "✓" : ""}
-                    {/*<img
-              src={rev.upvoteStatus == 1 ? "/UpvoteFill.png" : "/UpvoteEmpty.png"}
-              style={{ width: 45, height: 45 }}
-                  ></img>*/}
+                  <button style ={{gridColumn: "1"}}>
+                    <img
+                      review-id={rev.id}
+                      rest-name={restName}
+                      onClick={(e) => {
+                        if (authenticated) {
+                          handleUpvote(e, 1);
+                        }
+                      }}
+                      src={
+                        !authenticated
+                          ? "/UpvoteGrey.png"
+                          : rev.upvoteStatus == 1
+                          ? "/UpvoteFill.png"
+                          : "/UpvoteEmpty.png"
+                      }
+                      style={{width: 20, height: 20 }}
+                    ></img>
                   </button>
-                  <p style={{justifySelf: "center", gridColumn: "2"}}> {rev.upvoteCount}</p>
-                  <button
-                    disabled={!authenticated}
-                    review-id={rev.id}
-                    rest-name={restName}
-                    style={{gridColumn: "3"}}
-                    onClick={(e) => {
-                      handleUpvote(e, -1);
-                    }}
-                  >
-                    Down {rev.upvoteStatus == -1 ? "✓" : ""}
-                    {console.log(rev.upvoteStatus)}
+                  <p style={{ justifySelf: "center", gridColumn: "2" }}>
+                    {" "}
+                    {rev.upvoteCount}
+                  </p>
+                  <button style={{gridColumn: "3"}}>
+                    <img
+                      review-id={rev.id}
+                      rest-name={restName}
+                      onClick={(e) => {
+                        if (authenticated) {
+                          handleUpvote(e, -1);
+                        }
+                      }}
+                      src={
+                        !authenticated
+                          ? "/DownvoteGrey.png"
+                          : rev.upvoteStatus == -1
+                          ? "/DownvoteFill.png"
+                          : "/DownvoteEmpty.png"
+                      }
+                      style={{width: 20, height: 20 }}
+                    ></img>
                   </button>
                 </ReviewUpvoteContainer>
               </ReviewBottomContainer>
@@ -340,15 +373,15 @@ const RestaurantDetail = () => {
     }
 
     return (
-      <ReviewContainer style={{gridColumn: 1}}>
+      <ReviewContainer style={{ gridColumn: 1 }}>
         <ReviewTitleContainer>
-        <ReviewsTopTitle>Reviews</ReviewsTopTitle>
+          <ReviewsTopTitle>Reviews</ReviewsTopTitle>
           <Select
             onChange={(event) => {
               setSortOrder(event.target.value);
             }}
             name="sort"
-      >
+          >
             <option value="upvotes-descending">Upvotes (High to Low)</option>
             <option value="upvotes-ascending">Upvotes (Low to High)</option>
             <option value="stars-descending">Stars (High to Low)</option>
@@ -359,7 +392,12 @@ const RestaurantDetail = () => {
           <CreateReview to={`/${restName}/review`}>
             <Plus src="/CreateReviewPlus.png" />
             <h2
-              style={{ fontSize: "1.3rem", marginTop: "5%", marginBottom: "5%", gridColumn: "2" }}
+              style={{
+                fontSize: "1.3rem",
+                marginTop: "5%",
+                marginBottom: "5%",
+                gridColumn: "2",
+              }}
             >
               Create Review
             </h2>
@@ -407,9 +445,10 @@ const RestaurantDetail = () => {
 
   return (
     <DetailContainer>
+      <BackButton onClick={() => navigate(`/`)}>⟵ Go Back</BackButton>
       {getRestaurantContent()}
-      <div style={{display: "grid", gridTemplateColumns: "65%"}}>
-      {getReviewContent()}
+      <div style={{ display: "grid", gridTemplateColumns: "65%" }}>
+        {getReviewContent()}
         {HandleRestBlurb(restName)}
       </div>
     </DetailContainer>
@@ -418,11 +457,11 @@ const RestaurantDetail = () => {
 
 const InfoContainer = styled.div`
   display: grid;
-  grid-template-columns: 50% 50%;
-  margin-top: 5%;
+  grid-template-columns: 55%;
+  margin-top: 2%;
   padding: 2%;
   max-height: 40vh;
-  background-color: #D0DFEC;
+  background-color: #d0dfec;
   box-shadow: 10px 0px 2px;
 `;
 
@@ -440,6 +479,7 @@ const RestaurantContainer = styled.div`
   grid-template-rows: 20% 15%;
   flex-direction: column;
   grid-column: 1;
+  padding-left: 8%;
 `;
 
 const RestaurantTitle = styled.h1`
@@ -448,6 +488,23 @@ const RestaurantTitle = styled.h1`
   grid-row: 1;
   margin: 0%;
 `;
+
+const BackButton = styled.div`
+  background-color: #3284bf;
+  color: #efeeee;
+  cursor: pointer;
+  border-radius: 25px;
+  height: min-content;
+  width: 8%;
+  position: relative;
+  font-weight: bold;
+  margin-top: 2%;  
+  margin-left: 3%;
+  padding-right: 2%;
+  padding-left: 2%;
+  padding-top: 1%;
+  padding-bottom: 1%;
+`
 
 const RestaurantLocation = styled.div`
   color: #efeeee;
@@ -467,12 +524,6 @@ const RestaurantStars = styled.div`
   margin-top: auto;
   margin-bottom: auto;
   grid-row: 2;
-`;
-
-const Star = styled.img`
-  width: 40px;
-  height: 40px;
-  padding-right: 1%;
 `;
 
 const RestaurantDescription = styled.div`
@@ -502,14 +553,14 @@ const BlurbContainer = styled.div`
   max-width: 20vw;
   padding: 5%;
   display: grid;
-  box-shadow: 2px 2px 3px #6F7378;
+  box-shadow: 2px 2px 3px #6f7378;
 `;
 
 const Tags = styled.div`
-  gridRow: 2;
+  gridrow: 2;
   display: grid;
-  flexDirection: column;
-  grid-template-columns: repeat(3,1fr);
+  flexdirection: column;
+  grid-template-columns: repeat(3, 1fr);
   row-gap: 10%;
 `;
 
@@ -517,8 +568,8 @@ const BlurbTag = styled.div`
   display: flex;
   max-width: fit-content;
   border-radius: 18px;
-  color: #FFD100;
-  border-color: #FFD100;
+  color: #ffd100;
+  border-color: #ffd100;
   font-weight: bold;
   justify-content: center;
   padding: 5%;
@@ -544,7 +595,7 @@ const ReviewTitleContainer = styled.div`
   grid-row: 1;
   padding-bottom: 1.5%;
   padding-top: 2%;
-  grid-template-columns: 50% 50%
+  grid-template-columns: 50% 50%;
 `;
 
 const ReviewsTopTitle = styled.h1`
@@ -618,7 +669,7 @@ const ReviewBase = styled.div`
   display: grid;
   grid-template-rows: 40%;
   flex-direction: column;
-  box-shadow: -2px 2px 3px #ABB0B8;
+  box-shadow: -2px 2px 3px #abb0b8;
 `;
 
 const ReviewNameContainer = styled.div`
@@ -639,7 +690,6 @@ const UserName = styled.h3`
 `;
 
 const ReviewStars = styled.div`
-  margin-top: auto;
   margin-bottom: auto;
   grid-row: 1;
   grid-column: 2;
@@ -649,12 +699,13 @@ const ReviewBottomContainer = styled.div`
   font-size: 1rem;
   grid-row: 2;
   display: grid;
-  grid-template-columns: 80%
+  grid-template-columns: 87%;
 `;
 
 const ReviewContentContainer = styled.div`
   font-size: 1rem;
   grid-column: 1;
+  margin-top: 2%;
 `;
 
 const ReviewUpvoteContainer = styled.div`
@@ -663,6 +714,7 @@ const ReviewUpvoteContainer = styled.div`
   display: grid;
   grid-template-columns: auto-fit;
   margin-top: auto;
+  max-width: fit-content;
 `;
 
 export default RestaurantDetail;

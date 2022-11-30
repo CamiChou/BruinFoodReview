@@ -3,32 +3,24 @@ import mainPage from "./restaurantBox.css";
 import styled from "styled-components";
 
 import { db } from "../../firebase.js";
-import { ref, get, child } from "firebase/database";
+import { ref, get, child, set } from "firebase/database";
 import { getFilteredResturants } from "./filterBox.jsx";
 import { Link } from "react-router-dom";
+import { renderStars} from "../createReviewPage/StarRating.js";
 
 const dbRef = ref(db);
 
-const renderStars = (numStars) => {
-  if (numStars === undefined) {
-    numStars = 0; // TODO check why undefined
-  }
-  let off = Array(5 - numStars)
-    .fill(null)
-    .map((elem, id) => {
-      return <Star key={id} src={"/Star1.png"}></Star>;
-    });
-  let on = Array(numStars)
-    .fill(null)
-    .map((elem, id) => {
-      return <Star key={5 + id} src={"/Star2.png"}></Star>;
-    });
-  return (
-    <div>
-      {on}
-      {off}
-    </div>
-  );
+const updateRestaurantStars = async (restaurant) => {
+  let stars = await get(
+    child(dbRef, `reviews/${restaurant.key}/metadata/stars`)
+  ).then((snapshot) => {
+    if (snapshot.exists()) {
+      return snapshot.val();
+    }
+    return 0;
+  });
+  restaurant.stars = stars;
+  set(child(dbRef, `restaurants/${restaurant.key}/stars`), stars);
 };
 
 const RestaurantBox = (props) => {
@@ -54,7 +46,7 @@ const RestaurantBox = (props) => {
                 name: childData.name,
                 type: childData.type,
                 loc: childData.location,
-                stars:childData.stars,
+                stars: childData.stars,
                 url: "/rest-photos/" + childKey + ".jpeg",
               });
             }
@@ -81,6 +73,9 @@ const RestaurantBox = (props) => {
   if (isLoading) {
     restaurantTiles = <p>Restaurants are loading!</p>;
   } else {
+    restaurants.forEach((restaurant) => {
+      updateRestaurantStars(restaurant);
+    });
     restaurantTiles = restaurants.map((rest, id) => (
       <Link key={id} to={`/${rest.key}`}>
         <div className="Tile">
@@ -94,12 +89,10 @@ const RestaurantBox = (props) => {
                 borderRadius: "10px",
               }}
             />
-              <h1 className="Text">{rest.name}</h1>
-              <h3 className="typeDisplay"> Type: {rest.type} </h3>
-              <h3 className="restLocation">Location: {rest.loc}</h3>
-            <div className="stars">
-            {renderStars(Math.round(rest.stars))}
-            </div>
+            <h1 className="Text">{rest.name}</h1>
+            <h3 className="typeDisplay"> Type: {rest.type} </h3>
+            <h3 className="restLocation">Location: {rest.loc}</h3>
+            <div className="stars">{renderStars(Math.round(rest.stars))}</div>
           </div>
         </div>
       </Link>
@@ -110,9 +103,3 @@ const RestaurantBox = (props) => {
 };
 
 export default RestaurantBox;
-
-
-const Star = styled.img`
-  width: 48px;
-  padding-right: 1%;
-`;
