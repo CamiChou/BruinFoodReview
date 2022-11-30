@@ -59,6 +59,7 @@ const RestaurantBox = (props) => {
   } else {
     restaurantTiles = restaurants.map((rest, id) => (
       <Link to={`/${rest.key}`}>
+        <a>
         <div key={id} className="Tile">
           <div className="parent">
             <img
@@ -79,6 +80,7 @@ const RestaurantBox = (props) => {
             </div>
           </div>
         </div>
+        </a>
       </Link>
     ));
   }

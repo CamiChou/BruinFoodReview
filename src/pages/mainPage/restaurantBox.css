@@ -41,8 +41,14 @@
 
 .Text{
     grid-area: 1 / 2 / 2 / 3; 
+    
 }
 
+a {
+    text-decoration: none;
+    color:#3284bf;
+    text-decoration: none;
+    }
 
 .typeDisplay{
     grid-area: 2 / 2 / 3 / 3;
