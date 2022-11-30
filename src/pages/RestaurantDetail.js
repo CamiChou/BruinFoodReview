@@ -1,5 +1,5 @@
 //hooks
-import React, { useState, useEffect , useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { fetchSignInMethodsForEmail, getAuth } from "firebase/auth";
 import { FieldValue } from "firebase/firestore";
+import { ResultList } from "@appbaseio/reactivesearch";
 
 const RestaurantDetail = () => {
   const dbRef = ref(db);
@@ -18,8 +19,7 @@ const RestaurantDetail = () => {
   const auth = getAuth();
   const [forceFetchRestaurant, setForceFetchRestaurant] = useState(true);
   const [forceFetchReviews, setForceFetchReviews] = useState(true);
-  const [, updateState] = useState();
-  const forceUpdate = useCallback(() => updateState({}), []);
+  const [averageStars, setAverageStars] = useState(5);
 
   const renderStars = (numStars) => {
     if (numStars === undefined) {
@@ -99,9 +99,7 @@ const RestaurantDetail = () => {
 
   const getReviewData = async () => {
     const user = auth.currentUser;
-    // TODO check if logged in
 
-    //const reviewsRef = query(ref(db, "reviews"));
     var userUpvotes = {};
     if (user != null) {
       let upvotePath = `users/${user.uid}/reviews/${restName}`;
@@ -113,29 +111,32 @@ const RestaurantDetail = () => {
       });
     }
 
-    let reviewPath = `reviews/${restName}`;
-    let reviews = await get(child(dbRef, reviewPath)).then((snapshot) => {
-      const reviews = [];
-      if (snapshot.exists()) {
-        // lists all reviews and its content
-        snapshot.forEach((child) => {
-          const info = child.val();
-          const key = child.key;
-          if (Number.isInteger(Number(key))) {
-            const review = {
-              id: child.key,
-              content: info.content,
-              name: info.user,
-              stars: info.stars,
-              upvoteCount: info.upvotes,
-              upvoteStatus: userUpvotes[key],
-            };
-            reviews.push(review);
-          }
-        });
+    let reviews = await get(child(dbRef, `reviews/${restName}`)).then(
+      (snapshot) => {
+        const reviews = [];
+        if (snapshot.exists()) {
+          // lists all reviews and its content
+          snapshot.forEach((child) => {
+            const info = child.val();
+            const key = child.key;
+            if (Number.isInteger(Number(key))) {
+              const review = {
+                id: child.key,
+                content: info.content,
+                name: info.user,
+                stars: info.stars,
+                upvoteCount: info.upvotes,
+                upvoteStatus: userUpvotes[key],
+              };
+              reviews.push(review);
+            } else if (key == "metadata") {
+              setAverageStars(info.stars);
+            }
+          });
+        }
+        return reviews;
       }
-      return reviews;
-    });
+    );
     return reviews;
   };
   const getRestaurantData = async () => {
@@ -159,7 +160,6 @@ const RestaurantDetail = () => {
   };
 
   const HandleRestaurant = () => {
-    const [averageStars, setAverageStars] = useState(5);
     const [restaurantData, setRestaurantData] = useState({});
     const [isLoading, setLoading] = useState(true);
 
@@ -175,7 +175,7 @@ const RestaurantDetail = () => {
         setLoading(false);
       }
       fetchData();
-    }, [averageStars,forceFetchRestaurant]);
+    }, [averageStars, forceFetchRestaurant]);
 
     let name = "Loading Name...";
     let location = "Loading Location...";
@@ -188,7 +188,7 @@ const RestaurantDetail = () => {
     let restaurantContent = (
       <RestaurantContainer>
         <RestaurantTitle>{name}</RestaurantTitle>
-        <RestaurantStars>{renderStars(averageStars)}</RestaurantStars>
+        <RestaurantStars>{renderStars(Math.round(averageStars))}</RestaurantStars>
         <RestaurantLocation>{location}</RestaurantLocation>
         <RestaurantDescription>{description}</RestaurantDescription>
       </RestaurantContainer>
@@ -216,9 +216,8 @@ const RestaurantDetail = () => {
         setLoading(false);
       }
       fetchData();
-    }, [revData,forceFetchReviews]);
+    }, [revData, forceFetchReviews]);
 
-const d = new Date();
     let reviewContent;
     if (isLoading) {
       reviewContent = <HoldReviews>Loading Reviews...</HoldReviews>;
@@ -243,7 +242,9 @@ const d = new Date();
                 disabled={!authenticated}
                 review-id={rev.id}
                 rest-name={restName}
-                onClick={(e) => { handleUpvote(e, 1);}}
+                onClick={(e) => {
+                  handleUpvote(e, 1);
+                }}
               >
                 Up {rev.upvoteStatus == 1 ? "✓" : ""}
               </button>
@@ -251,7 +252,9 @@ const d = new Date();
                 disabled={!authenticated}
                 review-id={rev.id}
                 rest-name={restName}
-                onClick={(e) => {handleUpvote(e, -1)}}
+                onClick={(e) => {
+                  handleUpvote(e, -1);
+                }}
               >
                 Down {rev.upvoteStatus == -1 ? "✓" : ""}
               </button>
