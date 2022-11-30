@@ -7,9 +7,9 @@ import { ref, get, child } from "firebase/database";
 
 const Button = styled.button`
   background-color: #EFEEEE;
-  padding: 8px 12px;
+  padding: 5px 10px;
   font-weight: bold;
-  border-radius: 25px;
+  border-radius: 5px;
   outline: 0;
   transition: ease background-color 250ms;
   margin: 5px 5px;
