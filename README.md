@@ -2,11 +2,13 @@
 
 <img src="./public/BruinYelp.png" width=944 height=480>
 
+## What is BruinYelp?
 
+BruinYelp is UCLA's premier resource for eating on campus. Made for bruins by bruins, Bruinyelp allows users to rate and review dining locations on all parts of campus, from the top of the hill to the below-ground bomb shelter. Don't know what you want to eat? We've got you covered with our top of the line filtering system, allowing you to eat, enjoy, and then get right back to work (it is UCLA after all)!
 
 ## How to run BruinYelp on your machine
 
-### Get Local code
+### Download Code to Local Environment
 
 Clone the repository, `cd` into it if necessary, and install the requirements (assuming you already have [npm](https://www.npmjs.com/get-npm) installed on your machine):
 ```shell
