@@ -423,7 +423,7 @@ const RestaurantDetail = () => {
 
 const InfoContainer = styled.div`
   display: grid;
-  grid-template-columns: 50% 50%;
+  grid-template-columns: 55%;
   margin-top: 5%;
   padding: 2%;
   max-height: 40vh;
@@ -445,6 +445,7 @@ const RestaurantContainer = styled.div`
   grid-template-rows: 20% 15%;
   flex-direction: column;
   grid-column: 1;
+  padding-left: 8%;
 `;
 
 const RestaurantTitle = styled.h1`
