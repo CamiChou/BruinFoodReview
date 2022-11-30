@@ -5,6 +5,7 @@
     flex-direction: column;
     overflow-y: auto;
 
+
 }
 
 
@@ -12,12 +13,15 @@
 .Tile
 {
     display: flex;
-    flex-direction: column;
-    width: 90%;
+    flex-direction: both;
     margin: 2%;
     background-color: #D9D9D9;;
     padding: 2%;
     border-radius: 10px;
+    width:70%;
+    height:20vh;
+    align-self: center;
+
 }
 
 
@@ -28,6 +32,8 @@
     grid-template-rows: repeat(6, 1fr);
     grid-column-gap: 0px;
     grid-row-gap: 0px;
+    width:100%;
+
     
 }
 
@@ -38,12 +44,8 @@
     object-fit: cover;
     height: 100%;
     width: 100%; 
-}
-
-
-.Text{
-    grid-area: 1 / 2 / 3 / 3; 
-    
+    margin:0px;
+    padding:0px;
 }
 
 a {
@@ -52,20 +54,32 @@ a {
     text-decoration: none;
     }
 
-.typeDisplay{
-    grid-area: 5 / 2 / 6 / 3;
-}
-
-
-.restLocation
-{
-    grid-area: 4 / 2 / 5 / 3; 
-
+.Text{
+    margin:0px;
+    grid-area: 1 / 2 / 3 / 3; 
+    
 }
 
 .stars
 {
+    margin:0px;
     grid-area: 3 / 2 / 5 / 3; 
+    align-self: left;
 }
+
+.restLocation
+{
+    margin:0px;
+    grid-area: 5 / 2 / 6 / 3; 
+
+}
+
+.typeDisplay{
+    margin:0px;
+    grid-area: 6 / 2 / 7 / 3;
+}
+
+
+
 
 

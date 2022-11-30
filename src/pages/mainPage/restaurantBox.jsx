@@ -96,13 +96,9 @@ const RestaurantBox = (props) => {
                 borderRadius: "10px",
               }}
             />
-            <h1 className="Text">{rest.name}</h1>
-            <div className="typeDisplay">
-              <h3> Type: {rest.type} </h3>
-            </div>
-            <div className="restLocation">
-              <h3>Location: {rest.loc}</h3>
-            </div>
+              <h1 className="Text">{rest.name}</h1>
+              <h3 className="typeDisplay"> Type: {rest.type} </h3>
+              <h3 className="restLocation">Location: {rest.loc}</h3>
             <div className="stars">
             {renderStars(Math.round(rest.stars))}
             </div>
@@ -121,6 +117,5 @@ export default RestaurantBox;
 
 const Star = styled.img`
   width: 48px;
-  height: 48px;
   padding-right: 1%;
 `;
