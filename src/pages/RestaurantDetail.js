@@ -237,9 +237,10 @@ const RestaurantDetail = () => {
         <h3
           style={{ marginTop: "0%", marginBottom: "5%", fontSize: "x-large" }}
         >
-          Location
+          <span style={{color: "white"}}>Location: </span>
+          <span style={{color: "#FFD100"}}>{location}</span>
         </h3>
-        <p
+        {/* <p
           style={{
             fontWeight: "bold",
             color: "#FFD100",
@@ -247,8 +248,8 @@ const RestaurantDetail = () => {
             margin: "0%",
           }}
         >
-          {location}
-        </p>
+          
+        </p> */}
       </div>
     );
     let blurbTags = (
@@ -566,15 +567,15 @@ const Tags = styled.div`
 
 const BlurbTag = styled.div`
   display: flex;
-  max-width: fit-content;
   border-radius: 18px;
   color: #ffd100;
   border-color: #ffd100;
   font-weight: bold;
   justify-content: center;
   padding: 5%;
+  margin: 0% 3%;
   border-style: solid;
-  justify-self: flex-start;
+  // justify-self: flex-start;
   border-width: 2px;
   font-size: small;
 `;
