@@ -1,5 +1,5 @@
 import styles from "./styles.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import StarRating from "./StarRating";
 import { getDatabase, ref, get, child, set, update } from "firebase/database";
@@ -18,9 +18,12 @@ const CreateReview = ({ pageName }) => {
   const auth = getAuth();
   const navigate = useNavigate();
 
-  onAuthStateChanged(auth, (user) => {
-    setAuthenticated(user != null);
-  });
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      console.log("AUTH");
+      setAuthenticated(user != null);
+    });
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
