@@ -46,7 +46,6 @@ const RestaurantBox = (props) => {
 
   useEffect(() => {
     async function fetchData() {
-      console.log("FETCHING");
       let filter = props.filter;
       const data = await loadRestaurants(filter);
       setRestaurants(data);
