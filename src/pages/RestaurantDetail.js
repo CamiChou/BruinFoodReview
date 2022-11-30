@@ -9,7 +9,7 @@ import StarRating from "./createReviewPage/StarRating.js";
 import { useParams } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
-import { FieldValue } from "firebase/firestore";
+import { FieldValue, Timestamp } from "firebase/firestore";
 import { ResultList } from "@appbaseio/reactivesearch";
 
 const RestaurantDetail = () => {
@@ -285,28 +285,34 @@ const RestaurantDetail = () => {
                 <UserName>{rev.name}</UserName>
                 <ReviewStars>{renderStars(rev.stars)}</ReviewStars>
               </ReviewNameContainer>
-              <ReviewContent>{rev.content}</ReviewContent>
-              <p> {rev.upvoteCount}</p>
-              <button
-                disabled={!authenticated}
-                review-id={rev.id}
-                rest-name={restName}
-                onClick={(e) => {
-                  handleUpvote(e, 1);
-                }}
-              >
-                Up {rev.upvoteStatus == 1 ? "✓" : ""}
-              </button>
-              <button
-                disabled={!authenticated}
-                review-id={rev.id}
-                rest-name={restName}
-                onClick={(e) => {
-                  handleUpvote(e, -1);
-                }}
-              >
-                Down {rev.upvoteStatus == -1 ? "✓" : ""}
-              </button>
+                <ReviewBottomContainer>
+                <ReviewContentContainer>{rev.content}</ReviewContentContainer>
+                <ReviewUpvoteContainer>
+                  <button
+                    disabled={!authenticated}
+                    review-id={rev.id}
+                    rest-name={restName}
+                    style={{gridColumn: "1"}}
+                    onClick={(e) => {
+                      handleUpvote(e, 1);
+                    }}
+                  >
+                    Up {rev.upvoteStatus == 1 ? "✓" : ""}
+                  </button>
+                  <p style={{gridColumn: "2"}}> {rev.upvoteCount}</p>
+                  <button
+                    disabled={!authenticated}
+                    review-id={rev.id}
+                    rest-name={restName}
+                    style={{gridColumn: "3"}}
+                    onClick={(e) => {
+                      handleUpvote(e, -1);
+                    }}
+                  >
+                    Down {rev.upvoteStatus == -1 ? "✓" : ""}
+                  </button>
+                </ReviewUpvoteContainer>
+              </ReviewBottomContainer>
             </ReviewBase>
           ))}
         </HoldReviews>
@@ -511,7 +517,7 @@ const ReviewBase = styled.div`
   padding: 2%;
   margin: 1%;
   display: grid;
-  grid-template-rows: auto-fit;
+  grid-template-rows: 40%;
   flex-direction: column;
 `;
 
@@ -539,9 +545,24 @@ const ReviewStars = styled.div`
   grid-column: 2;
 `;
 
-const ReviewContent = styled.div`
+const ReviewBottomContainer = styled.div`
   font-size: 1rem;
-  grid-row: 3;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: 80%
+`;
+
+const ReviewContentContainer = styled.div`
+  font-size: 1rem;
+  grid-column: 1;
+`;
+
+const ReviewUpvoteContainer = styled.div`
+  font-size: 1rem;
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: auto-fit;
+  margin-top: auto;
 `;
 
 export default RestaurantDetail;
