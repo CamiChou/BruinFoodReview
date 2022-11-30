@@ -2,6 +2,7 @@ import { child, get, ref } from "firebase/database";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { db } from "../../firebase.js";
+import "./filterBox.css";
 
 const dbRef = ref(db);
 
