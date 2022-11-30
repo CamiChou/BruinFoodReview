@@ -17,14 +17,25 @@ const RestaurantDetail = () => {
   const params = useParams();
   const restName = params.name;
   const auth = getAuth();
-  const [forceFetchRestaurant, setForceFetchRestaurant] = useState(true);
-  const [forceFetchReviews, setForceFetchReviews] = useState(true);
-  const [averageStars, setAverageStars] = useState(5);
   const [authenticated, setAuthenticated] = useState(false);
 
-  onAuthStateChanged(auth, (user) => {
-    setAuthenticated(user != null);
-  });
+  const [forceFetchRestaurant, setForceFetchRestaurant] = useState(true);
+  const [forceFetchReviews, setForceFetchReviews] = useState(true);
+
+  const [restaurantData, setRestaurantData] = useState({});
+  const [averageStars, setAverageStars] = useState(5);
+  const [revData, setRevData] = useState([]);
+  const [sortOrder, setSortOrder] = useState("upvotes-descending");
+
+  const [isRestaurantLoading, setRestaurantLoading] = useState(true);
+  const [isReviewLoading, setReviewLoading] = useState(true);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      setForceFetchReviews(true);
+      setAuthenticated(user != null);
+    });
+  }, []);
 
   const renderStars = (numStars) => {
     if (numStars === undefined) {
@@ -132,6 +143,7 @@ const RestaurantDetail = () => {
                 stars: info.stars,
                 upvoteCount: info.upvotes,
                 upvoteStatus: userUpvotes[key],
+                timestamp: info.timestamp,
               };
               reviews.push(review);
             } else if (key == "metadata") {
@@ -144,6 +156,7 @@ const RestaurantDetail = () => {
     );
     return reviews;
   };
+
   const getRestaurantData = async () => {
     const resPath = `restaurants/${restName}/`;
     let restaurant = await get(child(dbRef, resPath)).then((snapshot) => {
@@ -164,28 +177,37 @@ const RestaurantDetail = () => {
     return restaurant;
   };
 
-  const HandleRestaurant = () => {
-    const [restaurantData, setRestaurantData] = useState({});
-    const [isLoading, setLoading] = useState(true);
+  const sortReviews = (reviews) => {
+    let sortedReviews = [...reviews];
+    switch (sortOrder) {
+      case "upvotes-descending":
+        sortedReviews.sort((a, b) => b.upvoteCount - a.upvoteCount);
+        break;
+      case "upvotes-ascending":
+        sortedReviews.sort((a, b) => a.upvoteCount - b.upvoteCount);
+        break;
+      case "stars-descending":
+        sortedReviews.sort((a, b) => b.stars - a.stars);
+        break;
+      case "stars-ascending":
+        sortedReviews.sort((a, b) => a.stars - b.stars);
+        break;
+      case "time-descending":
+        sortedReviews.sort((a, b) => b.timestamp - a.timestamp);
+        break;
+      case "time-ascending":
+        sortedReviews.sort((a, b) => a.timestamp - b.timestamp);
+        break;
+    }
+    console.log(`Length of Sorted Reviews: ${sortedReviews.length}`);
+    return sortedReviews;
+  };
 
-    useEffect(() => {
-      async function fetchData() {
-        if (forceFetchRestaurant) {
-          const newAverageStars = await getStarData(params.name);
-          const newRestaurantData = await getRestaurantData(params.name);
-          setAverageStars(newAverageStars);
-          setRestaurantData(newRestaurantData);
-          setForceFetchRestaurant(false);
-        }
-        setLoading(false);
-      }
-      fetchData();
-    }, [averageStars, forceFetchRestaurant]);
-
+  const getRestaurantContent = () => {
     let name = "Loading Name...";
     let location = "Loading Location...";
     let description = "Loading Description...";
-    if (!isLoading) {
+    if (!isRestaurantLoading) {
       name = restaurantData.name;
       location = restaurantData.loc;
       description = restaurantData.desc;
@@ -207,25 +229,10 @@ const RestaurantDetail = () => {
       </InfoContainer>
     );
   };
-  const HandleReviews = () => {
-    const [revData, setRevData] = useState([]);
-    const [isLoading, setLoading] = useState(true);
-    const user = auth.currentUser;
 
-    useEffect(() => {
-      async function fetchData() {
-        if (forceFetchReviews) {
-          const reviews = await getReviewData(restName);
-          setRevData(reviews);
-          setForceFetchReviews(false);
-        }
-        setLoading(false);
-      }
-      fetchData();
-    }, [revData, forceFetchReviews]);
-
+  const getReviewContent = () => {
     let reviewContent;
-    if (isLoading) {
+    if (isReviewLoading) {
       reviewContent = <HoldReviews>Loading Reviews...</HoldReviews>;
     } else if (revData.length == 0) {
       reviewContent = (
@@ -239,41 +246,49 @@ const RestaurantDetail = () => {
           {revData.map((rev, id) => (
             <ReviewBase key={id}>
               <ReviewTitleContainer>
-                <UserName>{rev.name}</UserName>
+                <UserName>
+                  {rev.name} {rev.id}
+                </UserName>
                 <ReviewStars>{renderStars(rev.stars)}</ReviewStars>
               </ReviewTitleContainer>
               <ReviewContent>{rev.content}</ReviewContent>
-              <p> {rev.upvoteCount}</p>
+              <p> Upvotes: {rev.upvoteCount}</p>
               <button
+                className={rev.upvoteStatus == 1 ? "on" : "off"}
                 disabled={!authenticated}
                 review-id={rev.id}
-                rest-name={restName}
                 onClick={(e) => {
                   handleUpvote(e, 1);
                 }}
               >
-                Up {rev.upvoteStatus == 1 ? "✓" : ""}
+                Up
               </button>
               <button
+                className={rev.upvoteStatus == -1 ? "on" : "off"}
                 disabled={!authenticated}
                 review-id={rev.id}
-                rest-name={restName}
                 onClick={(e) => {
                   handleUpvote(e, -1);
                 }}
               >
-                Down {rev.upvoteStatus == -1 ? "✓" : ""}
+                Down
               </button>
             </ReviewBase>
           ))}
         </HoldReviews>
       );
     }
+
     return (
       <ReviewContainer>
         <ReviewTitleContainer>
           <ReviewsTopTitle>Reviews</ReviewsTopTitle>
-          <select name="sort">
+          <select
+            onChange={(event) => {
+              setSortOrder(event.target.value);
+            }}
+            name="sort"
+          >
             <option value="upvotes-descending">Upvotes (High to Low)</option>
             <option value="upvotes-ascending">Upvotes (Low to High)</option>
             <option value="stars-descending">Stars (High to Low)</option>
@@ -295,10 +310,45 @@ const RestaurantDetail = () => {
     );
   };
 
+  // effect to fetch restaurant data
+  useEffect(() => {
+    async function fetchData() {
+      if (forceFetchRestaurant) {
+        const newAverageStars = await getStarData(params.name);
+        const newRestaurantData = await getRestaurantData(params.name);
+        setAverageStars(newAverageStars);
+        setRestaurantData(newRestaurantData);
+        setForceFetchRestaurant(false);
+      }
+      setRestaurantLoading(false);
+    }
+    fetchData();
+  }, [forceFetchRestaurant]);
+
+  // effect to fetch review data
+  useEffect(() => {
+    async function fetchData() {
+      if (forceFetchReviews) {
+        const reviews = await getReviewData(restName);
+        setForceFetchReviews(false);
+        const sortedReviews = sortReviews(reviews);
+        setRevData(sortedReviews);
+      }
+      setReviewLoading(false);
+    }
+    fetchData();
+  }, [forceFetchReviews, authenticated]);
+
+  // effect to sort reviews
+  useEffect(() => {
+    const sortedRevData = sortReviews(revData);
+    setRevData(sortedRevData);
+  }, [sortOrder]);
+
   return (
     <DetailContainer>
-      {HandleRestaurant(restName)}
-      {HandleReviews(restName)}
+      {getRestaurantContent()}
+      {getReviewContent()}
     </DetailContainer>
   );
 };

@@ -58,9 +58,9 @@ const RestaurantBox = (props) => {
     restaurantTiles = <p>Restaurants are loading!</p>;
   } else {
     restaurantTiles = restaurants.map((rest, id) => (
-      <Link to={`/${rest.key}`}>
+      <Link key={id} to={`/${rest.key}`}>
         <a>
-        <div key={id} className="Tile">
+        <div className="Tile">
           <div className="parent">
             <img
               className="restImages"
