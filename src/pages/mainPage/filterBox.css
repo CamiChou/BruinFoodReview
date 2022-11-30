@@ -10,21 +10,22 @@
 .filterBox
 {
   display: grid;
-  grid-template-rows: 6% 8% 15% 15% 25% 10%;
+  grid-template-rows: 7% 10% 19% 19% 24% 10%;
   margin: 2%;
-  margin-top: 2%;
+  margin-top: 5%;
   padding: 3%;
   overflow-y: auto;
-  height: 100%;
-  width: 92%;
+  height: 75%;
+  width: 86%;
   background-color: #D9D9D9;
   border-radius: 10px;
+  box-shadow: 0 0px 6px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin-left: 5%;
 }
 
 .button:active {
   outline-color: transparent;
   outline-style:solid;
-  box-shadow: 0 0 0 4px #000000;
   transition: 0.7s;
 }
 
