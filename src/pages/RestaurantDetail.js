@@ -343,7 +343,7 @@ const RestaurantDetail = () => {
               <ReviewBottomContainer>
                 <ReviewContentContainer>{rev.content}</ReviewContentContainer>
                 <ReviewUpvoteContainer>
-                  <button>
+                  <button style ={{gridColumn: "1"}}>
                     <img
                       review-id={rev.id}
                       rest-name={restName}
@@ -359,14 +359,14 @@ const RestaurantDetail = () => {
                           ? "/UpvoteFill.png"
                           : "/UpvoteEmpty.png"
                       }
-                      style={{ gridColumn: "1", width: 45, height: 45 }}
+                      style={{width: 20, height: 20 }}
                     ></img>
                   </button>
                   <p style={{ justifySelf: "center", gridColumn: "2" }}>
                     {" "}
                     {rev.upvoteCount}
                   </p>
-                  <button>
+                  <button style={{gridColumn: "3"}}>
                     <img
                       review-id={rev.id}
                       rest-name={restName}
@@ -382,7 +382,7 @@ const RestaurantDetail = () => {
                           ? "/DownvoteFill.png"
                           : "/DownvoteEmpty.png"
                       }
-                      style={{ gridColumn: "1", width: 45, height: 45 }}
+                      style={{width: 20, height: 20 }}
                     ></img>
                   </button>
                 </ReviewUpvoteContainer>
@@ -708,7 +708,7 @@ const ReviewBottomContainer = styled.div`
   font-size: 1rem;
   grid-row: 2;
   display: grid;
-  grid-template-columns: 80%;
+  grid-template-columns: 87%;
 `;
 
 const ReviewContentContainer = styled.div`
@@ -723,6 +723,7 @@ const ReviewUpvoteContainer = styled.div`
   display: grid;
   grid-template-columns: auto-fit;
   margin-top: auto;
+  max-width: fit-content;
 `;
 
 export default RestaurantDetail;
