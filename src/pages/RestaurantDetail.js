@@ -167,7 +167,7 @@ const RestaurantDetail = () => {
           name: resObject.name,
           desc: resObject.desc,
           loc: resObject.location,
-          tags: resObject.tags
+          tags: resObject.tags,
         };
       } else {
         console.error(`${resPath} does not exist`);
@@ -200,7 +200,6 @@ const RestaurantDetail = () => {
         sortedReviews.sort((a, b) => a.timestamp - b.timestamp);
         break;
     }
-    console.log(`Length of Sorted Reviews: ${sortedReviews.length}`);
     return sortedReviews;
   };
 
@@ -230,7 +229,7 @@ const RestaurantDetail = () => {
     );
   };
 
-  
+
   const HandleRestBlurb = () => {
     const [restaurantData, setRestaurantData] = useState({});
     const [isLoading, setLoading] = useState(true);
@@ -253,22 +252,43 @@ const RestaurantDetail = () => {
     if (!isLoading) {
       location = restaurantData.loc;
       tags = restaurantData.tags;
-      holdTags = tags.split(",")
+      holdTags = tags.split(",");
     }
     let blurbLocation = (
-      <div style = {{marginBottom: "2%"}}>
-        <h3 style={{marginTop: "0%", marginBottom: "5%", fontSize: "x-large"}}>Location</h3>
-        <p style={{fontWeight: "bold", color: "#FFD100", fontSize: "larger", margin: "0%"}}>{location}</p>
+      <div style={{ marginBottom: "2%" }}>
+        <h3
+          style={{ marginTop: "0%", marginBottom: "5%", fontSize: "x-large" }}
+        >
+          Location
+        </h3>
+        <p
+          style={{
+            fontWeight: "bold",
+            color: "#FFD100",
+            fontSize: "larger",
+            margin: "0%",
+          }}
+        >
+          {location}
+        </p>
       </div>
     );
     let blurbTags = (
-      <div style = {{display: "grid"}}>
-        <h3 style = {{gridRow: "1", marginTop: "2%", marginBottom: "5%", fontSize: "x-large"}}>Tags</h3>
+      <div style={{ display: "grid" }}>
+        <h3
+          style={{
+            gridRow: "1",
+            marginTop: "2%",
+            marginBottom: "5%",
+            fontSize: "x-large",
+          }}
+        >
+          Tags
+        </h3>
         <Tags>
-            {
-              holdTags.map((id,tag) => (
-                <BlurbTag  key={id}>{id}</BlurbTag>
-              ))}
+          {holdTags.map((id, tag) => (
+            <BlurbTag key={id}>{id}</BlurbTag>
+          ))}
         </Tags>
       </div>
     );
@@ -279,7 +299,6 @@ const RestaurantDetail = () => {
       </BlurbContainer>
     );
   };
-  
 
   const getReviewContent = () => {
     let reviewContent;
@@ -305,36 +324,38 @@ const RestaurantDetail = () => {
                 </div>
                 <ReviewStars>{renderStars(rev.stars)}</ReviewStars>
               </ReviewNameContainer>
-                <ReviewBottomContainer>
+              <ReviewBottomContainer>
                 <ReviewContentContainer>{rev.content}</ReviewContentContainer>
                 <ReviewUpvoteContainer>
                   <button
                     disabled={!authenticated}
                     review-id={rev.id}
                     rest-name={restName}
-                    style={{gridColumn: "1"}}
+                    style={{ gridColumn: "1" }}
                     onClick={(e) => {
                       handleUpvote(e, 1);
                     }}
                   >
-                  Up {rev.upvoteStatus == 1 ? "✓" : ""}
+                    Up {rev.upvoteStatus == 1 ? "✓" : ""}
                     {/*<img
               src={rev.upvoteStatus == 1 ? "/UpvoteFill.png" : "/UpvoteEmpty.png"}
               style={{ width: 45, height: 45 }}
                   ></img>*/}
                   </button>
-                  <p style={{justifySelf: "center", gridColumn: "2"}}> {rev.upvoteCount}</p>
+                  <p style={{ justifySelf: "center", gridColumn: "2" }}>
+                    {" "}
+                    {rev.upvoteCount}
+                  </p>
                   <button
                     disabled={!authenticated}
                     review-id={rev.id}
                     rest-name={restName}
-                    style={{gridColumn: "3"}}
+                    style={{ gridColumn: "3" }}
                     onClick={(e) => {
                       handleUpvote(e, -1);
                     }}
                   >
                     Down {rev.upvoteStatus == -1 ? "✓" : ""}
-                    {console.log(rev.upvoteStatus)}
                   </button>
                 </ReviewUpvoteContainer>
               </ReviewBottomContainer>
@@ -345,15 +366,15 @@ const RestaurantDetail = () => {
     }
 
     return (
-      <ReviewContainer style={{gridColumn: 1}}>
+      <ReviewContainer style={{ gridColumn: 1 }}>
         <ReviewTitleContainer>
-        <ReviewsTopTitle>Reviews</ReviewsTopTitle>
+          <ReviewsTopTitle>Reviews</ReviewsTopTitle>
           <Select
             onChange={(event) => {
               setSortOrder(event.target.value);
             }}
             name="sort"
-      >
+          >
             <option value="upvotes-descending">Upvotes (High to Low)</option>
             <option value="upvotes-ascending">Upvotes (Low to High)</option>
             <option value="stars-descending">Stars (High to Low)</option>
@@ -364,7 +385,12 @@ const RestaurantDetail = () => {
           <CreateReview to={`/${restName}/review`}>
             <Plus src="/CreateReviewPlus.png" />
             <h2
-              style={{ fontSize: "1.3rem", marginTop: "5%", marginBottom: "5%", gridColumn: "2" }}
+              style={{
+                fontSize: "1.3rem",
+                marginTop: "5%",
+                marginBottom: "5%",
+                gridColumn: "2",
+              }}
             >
               Create Review
             </h2>
@@ -413,8 +439,8 @@ const RestaurantDetail = () => {
   return (
     <DetailContainer>
       {getRestaurantContent()}
-      <div style={{display: "grid", gridTemplateColumns: "65%"}}>
-      {getReviewContent()}
+      <div style={{ display: "grid", gridTemplateColumns: "65%" }}>
+        {getReviewContent()}
         {HandleRestBlurb(restName)}
       </div>
     </DetailContainer>
@@ -427,7 +453,7 @@ const InfoContainer = styled.div`
   margin-top: 5%;
   padding: 2%;
   max-height: 40vh;
-  background-color: #D0DFEC;
+  background-color: #d0dfec;
   box-shadow: 10px 0px 2px;
 `;
 
@@ -508,14 +534,14 @@ const BlurbContainer = styled.div`
   max-width: 20vw;
   padding: 5%;
   display: grid;
-  box-shadow: 2px 2px 3px #6F7378;
+  box-shadow: 2px 2px 3px #6f7378;
 `;
 
 const Tags = styled.div`
-  gridRow: 2;
+  gridrow: 2;
   display: grid;
-  flexDirection: column;
-  grid-template-columns: repeat(3,1fr);
+  flexdirection: column;
+  grid-template-columns: repeat(3, 1fr);
   row-gap: 10%;
 `;
 
@@ -523,8 +549,8 @@ const BlurbTag = styled.div`
   display: flex;
   max-width: fit-content;
   border-radius: 18px;
-  color: #FFD100;
-  border-color: #FFD100;
+  color: #ffd100;
+  border-color: #ffd100;
   font-weight: bold;
   justify-content: center;
   padding: 5%;
@@ -550,7 +576,7 @@ const ReviewTitleContainer = styled.div`
   grid-row: 1;
   padding-bottom: 1.5%;
   padding-top: 2%;
-  grid-template-columns: 50% 50%
+  grid-template-columns: 50% 50%;
 `;
 
 const ReviewsTopTitle = styled.h1`
@@ -624,7 +650,7 @@ const ReviewBase = styled.div`
   display: grid;
   grid-template-rows: 40%;
   flex-direction: column;
-  box-shadow: -2px 2px 3px #ABB0B8;
+  box-shadow: -2px 2px 3px #abb0b8;
 `;
 
 const ReviewNameContainer = styled.div`
@@ -654,7 +680,7 @@ const ReviewBottomContainer = styled.div`
   font-size: 1rem;
   grid-row: 2;
   display: grid;
-  grid-template-columns: 80%
+  grid-template-columns: 80%;
 `;
 
 const ReviewContentContainer = styled.div`

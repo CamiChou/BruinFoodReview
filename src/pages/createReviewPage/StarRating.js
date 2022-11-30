@@ -1,8 +1,7 @@
-import styles from "./styles.css";
 import React, { useState } from "react";
 
-const UNFILLED = "/Star1.png";
-const FILLED = "/Star2.png";
+const Unfilled = "/Star1.png";
+const Filled = "/Star2.png";
 
 const StarRating = ({ rating, setRating }) => {
   const [hover, setHover] = useState(0);
@@ -32,7 +31,7 @@ const StarRating = ({ rating, setRating }) => {
             value="rating"
           >
             <img
-              src={on ? FILLED : UNFILLED}
+              src={on ? Filled : Unfilled}
               style={{ width: 45, height: 45 }}
             ></img>
           </button>
