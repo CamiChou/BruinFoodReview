@@ -224,7 +224,7 @@ const RestaurantDetail = () => {
     );
     return (
       <InfoContainer>
-        {getRestaurantContent}
+        {restaurantContent}
         <RestaurantPhoto src={`/rest-photos/${restName}.jpeg`} />
       </InfoContainer>
     );
@@ -297,56 +297,56 @@ const RestaurantDetail = () => {
       fetchData();
     }, [revData, forceFetchReviews]);
 
-  const getReviewContent = () => {
-    let reviewContent;
-    if (isReviewLoading) {
-      reviewContent = <HoldReviews>Loading Reviews...</HoldReviews>;
-    } else if (revData.length == 0) {
-      reviewContent = (
-        <HoldReviews>
-          No reviews yet! Be the first to create a review!
-        </HoldReviews>
-      );
-    } else {
-      reviewContent = (
-        <HoldReviews>
-          {revData.map((rev, id) => (
-            <ReviewBase key={id}>
-              <ReviewNameContainer>
-                <UserName>{rev.name}</UserName>
-                <ReviewStars>{renderStars(rev.stars)}</ReviewStars>
-              </ReviewNameContainer>
-                <ReviewBottomContainer>
-                <ReviewContentContainer>{rev.content}</ReviewContentContainer>
-                <ReviewUpvoteContainer>
-                  <button
-                    disabled={!authenticated}
-                    review-id={rev.id}
-                    rest-name={restName}
-                    style={{gridColumn: "1"}}
-                    onClick={(e) => {
-                      handleUpvote(e, 1);
-                    }}
-                  >
-                    Up {rev.upvoteStatus == 1 ? "✓" : ""}
-                  </button>
-                  <p style={{gridColumn: "2"}}> {rev.upvoteCount}</p>
-                  <button
-                    disabled={!authenticated}
-                    review-id={rev.id}
-                    rest-name={restName}
-                    style={{gridColumn: "3"}}
-                    onClick={(e) => {
-                      handleUpvote(e, -1);
-                    }}
-                  >
-                    Down {rev.upvoteStatus == -1 ? "✓" : ""}
-                  </button>
-                </ReviewUpvoteContainer>
-              </ReviewBottomContainer>
-            </ReviewBase>
-          ))}
-        </HoldReviews>
+    const getReviewContent = () => {
+      let reviewContent;
+      if (isReviewLoading) {
+        reviewContent = <HoldReviews>Loading Reviews...</HoldReviews>;
+      } else if (revData.length == 0) {
+        reviewContent = (
+          <HoldReviews>
+            No reviews yet! Be the first to create a review!
+          </HoldReviews>
+        );
+      } else {
+        reviewContent = (
+          <HoldReviews>
+            {revData.map((rev, id) => (
+              <ReviewBase key={id}>
+                <ReviewNameContainer>
+                  <UserName>{rev.name}</UserName>
+                  <ReviewStars>{renderStars(rev.stars)}</ReviewStars>
+                </ReviewNameContainer>
+                  <ReviewBottomContainer>
+                  <ReviewContentContainer>{rev.content}</ReviewContentContainer>
+                  <ReviewUpvoteContainer>
+                    <button
+                      disabled={!authenticated}
+                      review-id={rev.id}
+                      rest-name={restName}
+                      style={{gridColumn: "1"}}
+                      onClick={(e) => {
+                        handleUpvote(e, 1);
+                      }}
+                    >
+                      Up {rev.upvoteStatus == 1 ? "✓" : ""}
+                    </button>
+                    <p style={{gridColumn: "2"}}> {rev.upvoteCount}</p>
+                    <button
+                      disabled={!authenticated}
+                      review-id={rev.id}
+                      rest-name={restName}
+                      style={{gridColumn: "3"}}
+                      onClick={(e) => {
+                        handleUpvote(e, -1);
+                      }}
+                    >
+                      Down {rev.upvoteStatus == -1 ? "✓" : ""}
+                    </button>
+                  </ReviewUpvoteContainer>
+                </ReviewBottomContainer>
+              </ReviewBase>
+            ))}
+          </HoldReviews>
       );
     }
 
@@ -371,7 +371,7 @@ const RestaurantDetail = () => {
             </h2>
           </CreateReview>
         </ReviewTitleContainer>
-        {getReviewContent}
+        {reviewContent}
       </ReviewContainer>
     );
   };
