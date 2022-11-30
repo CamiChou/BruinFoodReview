@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { db } from "../firebase";
 import { ref, get, child, query, set, update } from "firebase/database";
-import StarRating from "./createReviewPage/StarRating.js";
+import { renderStars} from "./createReviewPage/StarRating.js";
 import { useParams } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
@@ -37,28 +37,6 @@ const RestaurantDetail = () => {
       setAuthenticated(user != null);
     });
   }, []);
-
-  const renderStars = (numStars) => {
-    if (numStars === undefined) {
-      numStars = 0; // TODO check why undefined
-    }
-    let off = Array(5 - numStars)
-      .fill(null)
-      .map((elem, id) => {
-        return <Star key={id} src={"/Star1.png"}></Star>;
-      });
-    let on = Array(numStars)
-      .fill(null)
-      .map((elem, id) => {
-        return <Star key={5 + id} src={"/Star2.png"}></Star>;
-      });
-    return (
-      <div>
-        {on}
-        {off}
-      </div>
-    );
-  };
 
   const handleUpvote = async (event, increment) => {
     const user = auth.currentUser;
@@ -517,7 +495,7 @@ const BackButton = styled.div`
   cursor: pointer;
   border-radius: 25px;
   height: min-content;
-  width: 8%;
+  width: 6%;
   position: relative;
   font-weight: bold;
   margin-top: 2%;  
@@ -526,7 +504,7 @@ const BackButton = styled.div`
   padding-left: 2%;
   padding-top: 1%;
   padding-bottom: 1%;
-`
+`;
 
 const RestaurantLocation = styled.div`
   color: #efeeee;
@@ -546,12 +524,6 @@ const RestaurantStars = styled.div`
   margin-top: auto;
   margin-bottom: auto;
   grid-row: 2;
-`;
-
-const Star = styled.img`
-  width: 40px;
-  height: 40px;
-  padding-right: 1%;
 `;
 
 const RestaurantDescription = styled.div`
