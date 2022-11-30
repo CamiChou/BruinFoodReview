@@ -81,7 +81,7 @@ a {
 }
 
 .typeDisplay{
-    margin:1%;
+    margin:0%;
     grid-area: 4 / 2 / 5 / 3; 
     height:fit-content;
     width:fit-content ;
