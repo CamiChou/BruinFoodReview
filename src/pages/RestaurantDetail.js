@@ -670,7 +670,7 @@ const ReviewNameContainer = styled.div`
   grid-row: 1;
   padding-top: 2%;
   padding-bottom: 5%;
-  grid-template-columns: 65%;
+  grid-template-columns: 60%;
 `;
 
 const UserName = styled.h3`
