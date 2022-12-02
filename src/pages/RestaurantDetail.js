@@ -271,7 +271,7 @@ const RestaurantDetail = () => {
 
   const formatTimestamp = (timestamp) => {
     var date = new Date(timestamp);
-    var dateStr = `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`;
+    var dateStr = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
     var hours = date.getHours();
     var ampm = hours < 12 ? "AM" : "PM";
     hours %= 12;
